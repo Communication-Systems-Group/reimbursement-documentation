@@ -1,0 +1,85 @@
+\documentclass[12pt,a4paper,english,twoside]{book}
+\usepackage[german,english]{babel}
+\usepackage[T1]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{epsfig}
+\usepackage{moreverb}
+\usepackage{rotating}
+\usepackage{enumerate}
+\usepackage{graphics, graphicx,wrapfig}
+\usepackage{fancybox}
+\usepackage{picinpar,varioref,floatflt}
+\usepackage{ae}
+\usepackage{longtable}
+\usepackage{textcomp}
+\usepackage{float}
+\usepackage{url}
+\usepackage{unizhdt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Define the language of the diploma thesis
+\selectlanguage{english}
+%\selectlanguage{german}
+
+\pagestyle{headings}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Define the author printed on the cover page
+\author{Author}
+% Define the city and country of the author
+\authorcity{City, Country}
+% Define the student ID (Matrikelnummer)
+\studentid{00-711-999}
+% Define the title with optional subtitle
+\title{Web-based IFI Reimbursement Project}
+% Define the supervisors
+\supervisors{...}
+% Define the submission date
+\submissiondate{January 1, 2006}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Make the title page
+\maketitle
+
+% Make the imprint on the back of the cover page
+\makeimprint
+
+\pagenumbering{roman}
+
+% Include the files of the diploma thesis
+%\cleardoublepage
+\input{content/abstract.tex}
+%\cleardoublepage
+\input{content/acknowledgments.tex}
+
+\tableofcontents
+
+\cleardoublepage
+\pagenumbering{arabic}
+\input{content/introduction.tex}
+\input{content/approach.tex}
+%\input{.tex}
+%\input{.tex}
+\input{content/user-guide.tex}
+\input{content/conclusion.tex}
+
+\input{content/bibliography.tex}
+%\input{content/glossary.tex}
+
+%\addcontentsline{toc}{chapter}{List of Figures}
+%\listoffigures
+%\addcontentsline{toc}{chapter}{List of Tables}
+%\listoftables
+
+\input{content/appendix.tex}
+
+\end{document}
