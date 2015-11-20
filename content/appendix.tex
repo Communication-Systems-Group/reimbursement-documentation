@@ -2,6 +2,50 @@
 
 \chapter{Installation Guidelines}
 
+\section{Backend / Server}
+
+The server runs in a Maven environment. Maven is a dependency management and build tool.
+
+\subsection{Maven installation}
+To install Maven complete the following steps:
+
+\begin{enumerate}
+    \item Maven should be already integrated in Eclipse for Java EE. If the following steps do not work, download maven and the m2e eclipse plugin.
+    \item Clone or checkout the public reimbursement-server repository hosted on Github.
+    \item After checking out the server project, the project needs to be configured as a Maven project.
+    \item Run \texttt{mvn:install} to build and download all the dependencies required for the project. 
+\end{enumerate}
+
+
+\section{Frontend / Client}
+
+\subsection{Setup}
+To run the application locally on the client, follow the following steps.
+
+\subsubsection{NPM}
+First we need to install npm:
+\begin{enumerate}
+  \item Make sure, you have installed the latest version of Node.js.
+  \item Clone or checkout the public reimbursement-client repository hosted on Github.
+  \item Open a command-line tool and navigate to the root of the reimbursement-client directory and run \texttt{npm install}.
+  \item If Bower is not already installed on your system (check in with \texttt{which bower}), install it by running \texttt{npm install -g bower}. After you have verified that Bower is installed run \texttt{bower install}.
+\end{enumerate}
+
+\subsubsection{Grunt}
+Grunt builds the front-end files. It has multiple modules to build: you can concat, copy, prefix, sass-compile and so on with grunt. It’s an easy way to build your source files. The configuration of Grunt is stored in Gruntfile.js and the modules of grunt are loaded using NPM (package.json).
+\begin{enumerate}
+  \item After all the steps in NPM section are completed, grunt needs to be installed. This can be done by \texttt{npm install -g grunt-cli}. Now we can start using the grunt CLI. There are various options available:
+  \begin{itemize}
+      \item \texttt{grunt}: This command starts the default grunt operation. It is used to build all the files. Use it only for development purpose, because the minified versions are not created.
+      \item \texttt{grunt prod}: This command minifies and uglifies all the files. Use it to test if minification and uglification covers all the production requirements.
+      \item \texttt{grunt serve}: This command starts a local http-server and updates automatically. If a source file is changed, the build will be executed and the browser will be reloaded to visualize the changes.
+      \item \texttt{grunt prod-serve}: This command runs starts a local server with the production files as a base.
+      \item \texttt{grunt deploy}: This command builds the project with the production profile and uploads the build files to the Tomcat instance (makes a redeploy). The deployment requires a deploy.json with the server configuration. See section Deployment for details.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Deployment}
+
 Document how to deploy/update and change crucial settings (ldap, costcategories, etc.)
 
 \chapter{Contents of the CD}
