@@ -3,6 +3,7 @@
 \chapter{Installation Guidelines}
 
 \section{Backend / Server}
+\label{sec:backend-server}
 
 The server runs in a Maven environment. Maven is a dependency management and build tool.
 
@@ -47,5 +48,76 @@ Grunt builds the front-end files. It has multiple modules to build: you can conc
 \subsection{Deployment}
 
 Document how to deploy/update and change crucial settings (ldap, costcategories, etc.)
+
+\section{Deployment}
+
+\subsection{Backend}
+
+To deploy the from the local running copy to the server running a Tomcat the following steps are required:
+
+\begin{itemize}
+    \item Configure the local Java environment to run the project described in section \ref{sec:backend-server} 
+    \item Store the credentials of the Tomcat7 instance and productive database in the maven directory. The maven directory is stored mostly on the local machines user directory in the \texttt{.m2/settings.xml} file. The file needs to have the following structure:
+
+    \begin{lstlisting}
+    <?xml version="1.0" encoding="UTF-8"?>
+        <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0      
+        http://maven.apache.org/xsd/settings-1.0.0.xsd">
+        	<servers>
+        		<server>
+        			<id>reimbursement-server</id>
+        			<username></username>
+        			<password></password>
+        		</server>
+        	</servers>
+        	<profiles>
+        		<profile>
+        			<id>reimbursement_int</id>
+        			<properties>
+        				<jdbc.username></jdbc.username>
+        				<jdbc.password></jdbc.password>
+        			</properties>
+        		</profile>
+        		<profile>
+        			<id>reimbursement_prod</id>
+        			<properties>
+        				<jdbc.username></jdbc.username>
+        				<jdbc.password></jdbc.password>
+        			</properties>
+        		</profile>
+        	</profiles>
+        </settings>
+    \end{lstlisting}
+    
+    Add the respective usernames and passwords on the document.
+    
+    \item To configure the deployment right click to the server project in Eclipse -> Run As -> Maven Build... and enter the following values in the corresponding input fields:
+    \newline
+    Name: \texttt{reimbursement-deploy}
+    \newline
+    Goals: \texttt{clean tomcat7:redeploy}
+    \newline
+    Profiles: \texttt{reimbursement\_prod}
+    \item Call the new created maven build and the project will be deployed to the production server.  
+    
+\end{itemize}
+    
+\subsection{Frontend}
+
+\begin{itemize}
+
+    \item Create a new file with the following content named \textit{deploy.json}:
+    \begin{lstlisting}
+        {
+            "username": "",
+            "password": "" 
+        }   
+    \end{lstlisting}
+    \item Add the credentials to the file deploy.json. The deploy.json file is stored in the main directory.
+    \item Open a command line tool and run \texttt{grunt deploy}. This will automatically deploy the frontend to the server. 
+
+\end{itemize}
 
 \chapter{Contents of the CD}

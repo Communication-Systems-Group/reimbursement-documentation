@@ -19,6 +19,7 @@
 \usepackage{float}
 \usepackage{url}
 \usepackage{unizhdt}
+\usepackage{listings}
 
 \graphicspath{ {content/images/} }
 
@@ -30,6 +31,28 @@
 % Define the language of the diploma thesis
 \selectlanguage{english}
 %\selectlanguage{german}
+
+% Define available list stylings
+
+\usepackage{color}
+\definecolor{gray}{rgb}{0.4,0.4,0.4}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+
+\lstset{ % General setup for the package
+	language=Perl,
+	basicstyle=\small\sffamily,
+	numbers=left,
+ 	numberstyle=\tiny,
+	frame=tb,
+	tabsize=4,
+	columns=fixed,
+	showstringspaces=false,
+	showtabs=false,
+	keepspaces,
+	commentstyle=\color{red},
+	keywordstyle=\color{blue}
+}
 
 \pagestyle{headings}
 
