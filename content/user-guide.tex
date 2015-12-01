@@ -3,9 +3,14 @@
 \section{Registration}
 \label{sec:registration}
 
-The reimbursement-tool is connected to the UZH-IFI LDAP server. This allows employed persons at the IFI department to use their existing login credentials provided by the University of Zurich.\\
-On the initial login of a user he has to pass a two-stepped registration process. Figure \ref{fig:registration-step01} shows the user has to capture his official UZH registration and phone number. The registration / personnel number is of the form 01234567.\\
-Further the complete personal telephone number of the user in the form 0441234567 needs to be provided. This allows the reimbursement team to double check on the users hand-in expenses. 
+\subsection{Step 1}
+The reimbursement-tool is connected to the UZH-IFI LDAP server. This allows employed persons at the IFI department to use their existing login credentials provided by the University of Zurich.\newline
+On the initial login of a user he needs to pass a two-stepped registration process. On Figure \ref{fig:registration-step01} the user needs to input two values:
+\begin{itemize}
+    \item UZH personnel number is the employee number, written on the employment card. It is of the form \textit{01-123-456}. Enter the number without the leading 0 and hyphens; i.e. \textit{123456}.
+    \item UZH phone number is the personnel phone number of the employee. Enter it in the form in the form \textit{0441234567}.
+\end{itemize}
+
 
 \begin{figure}[H]
     \centering
@@ -14,7 +19,8 @@ Further the complete personal telephone number of the user in the form 044123456
     \label{fig:registration-step01}
 \end{figure}
 
-On Figure \ref{fig:registration-step02} the user has to add his signature either by uploading an image or capturing using a third party touchscreen device like a smart phone or try it in the browser. This signature is mandatory for the signature of the generated Pdf document containing all expense items.  
+\subsection{Step 2}
+On Figure \ref{fig:registration-step02} the user needs to add his handwritten signature either by uploading an image or capture it using a third party touchscreen device like a smart phone. This signature is required to sign the generated Pdf document containing all expense items.  
 
 \begin{figure}[H]
     \centering
@@ -23,12 +29,45 @@ On Figure \ref{fig:registration-step02} the user has to add his signature either
     \label{fig:registration-step02}
 \end{figure}
 
-After completing the registration process, these captured information and signature can always be edited by going to the settings screen via the menu bar.
+After completing the registration process, these captured information and signature can always be edited by calling the settings screen on the navigation bar.
 \clearpage
 
 \section{Expenses}
 
-An expense is an entity captured by the user. Every expense is defined by an \textbf{accounting description} that will be visual in SAP. An expense consists of 1 to 15 receipts. 
+An expense is an entity captured by an user. Every expense is defined by an \textbf{accounting description} that will be visual in SAP. An expense consists of 1 to 15 receipts.
+
+The user has to create an expense, add receipts to it and assign it to the manager. The manager will check the correctness, add the corresponding projects and assign it to the finance admin if the Expense is correct. For a detailed description of the process please refer to section \ref{sec:process}. 
+
+\subsection{Create expense}
+
+To create an expense, to user needs to navigate to the \textbf{Dashboard} and click on the button \textbf{Create new Expense}. A modal window will open where an SAP description needs to be entered. This value will be used at the SAP system. The SAP description can changed afterwards as well.\newline After you entered the SAP description and clicked \textbf{Next} you will enter the \textit{Expense-View} (Figure \ref{fig:expensesitems-overview}). This view shows all available receipts captured for this specific expense. 
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.80\textwidth]{expensesItems-overview}}
+    \caption{Expense-View: Overview}
+    \label{fig:expensesitems-overview}
+\end{figure}
+
+On the top left-hand side the \textbf{SAP description} is added. The small button on the right can be used to change it. On the top right-hand side the actual process step and the open steps of the Expense are visualized. This process bar always shows the current state the Expense is in, beside the completed and the open ones.\newline
+Further the user can add, edit and remove receipts. To add a new receipt the user needs to click on the button \textbf{Add new Receipt}. See Section \ref{sec:addreceipt} for details.\newline
+Existing receipts can be edited and removed by clicking on the respective buttons in the receipts-list.
+
+
+\subsection{Add receipt}
+\label{sec:addreceipt}
+By adding a new receipt or editing an existing one, the user needs to enter the following mandatory information:  
+\begin{itemize}
+    \item \textbf{Receipt date} will further be used to calculate the correct exchange rate if a foreign currency is selected.  
+    \item \textbf{Cost category} selected out of a defined list of available cost categories.
+    \item Original and calculated amount based on the exchange rate.
+    \item The \textbf{project assignment} is added by a user with role \textit{manager}, \textit{deputy manager} or \textit{finance administrator}.
+    \item A short \textbf{explanation} that describes the purpose of the receipt.   
+    \item \textbf{Receipt attachment} used for verification purpose of the captured receipt. 
+\end{itemize}
+
+See Figure \ref{fig:expenses-add01} for details.
+
 
 \begin{figure}[H]
     \centering
@@ -37,25 +76,22 @@ An expense is an entity captured by the user. Every expense is defined by an \te
     \label{fig:expenses-add01}
 \end{figure}
 
-A receipt consists out of the following mandatory fields (see Figure \ref{fig:expenses-add01}):
-\begin{itemize}
-    \item \textbf{Receipt date} will further be used to calculate the correct exchange rate if a foreign currency is selected.  
-    \item \textbf{Cost category} selected out of a defined list of available cost categories.
-    \item Original and calculated amount based on the exchange rate.
-    \item The \textbf{project assignment} is added by a user with role \textit{manager}, \textit{deputy manager} or \textit{finance administrator}.
-    \item A short \textbf{explanation} that describes the purpose of the receipt.   
-    \item \textbf{Attachment} used for verification purpose of the captured receipt. 
-\end{itemize}
+\subsection{Assign expense to manager}
+If all receipts are captured the receipt will be assigned to the manager in charge. After the assignment, the expense cannot be edited anymore. To assign an expense to the manager, click on the \textbf{Submit to Manager} button.
 
+\subsection{States}
 Every expense will be in one of the following states during the process:
 
 \begin{itemize}
-    \item \textbf{DRAFT} status occurs if the expense is created and it has not been assigned to a \textit{manager}.
-    \item \textbf{ASSIGNED} status occurs if a \textit{manager} or \textit{deputy manager} has assigned the expense to him.
-    \item \textbf{REJECTED} status occurs if the created expense is not accepted by the \textit{manager}, \textit{deputy manager} or \textit{finance administrator}. In \textbf{REJECTED} status it will be reassigned to the user who created it.
-    \item \textbf{SIGNED} status occurs if the expense has been signed by all three instances; \textit{employee}, \textit{manager} or \textit{deputy manager} and \textit{finance administrator}
-    \item \textbf{PRINTED} status occurs if the expense and all its receipts are successfully converted into a digital document.
+    \item \textbf{DRAFT} state occurs if the expense is created and it has not been assigned to a \textit{manager}.
+    \item \textbf{ASSIGNED} state occurs if a \textit{manager} or \textit{deputy manager} has assigned the expense to him.
+    \item \textbf{REJECTED} state occurs if the created expense is not accepted by the \textit{manager}, \textit{deputy manager} or \textit{finance administrator}. In \textbf{REJECTED} status it will be reassigned to the user who created it.
+    \item \textbf{SIGNED} state occurs if the expense has been signed by all three instances; \textit{employee}, \textit{manager} or \textit{deputy manager} and \textit{finance administrator}
+    \item \textbf{PRINTED} state occurs if the expense and all its receipts are successfully converted into a digital document.
 \end{itemize}
+
+\subsection{Digital signature}
+tbd
 
 \section{User}
 
@@ -71,4 +107,8 @@ There exists different roles for users to login to the system. A user is allowed
 \end{itemize}
 
 \section{Guest view}
+With the guest view users can retrieve expenses without the need of an account for the system. They can open the guest view by a special URL, that is provided on every printed expense document. The URL is located on the second page in form of a QR-Code and an URL. The user can either scan the QR-Code or typewrite the URL in a browser window and he'll get access to the respective expense.
 
+
+\section{Process}
+\label{sec:process}
