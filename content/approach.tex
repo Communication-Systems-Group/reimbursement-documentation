@@ -2,26 +2,51 @@
 
 \section{Architecture}
 
-The Backend is considered as the software and database that runs on a server hosted by the IFI \cite{ifi}. The Frontend/Client communicates with the Backend via a RESTful APIs described in section \ref{sec:restfulapi} below.
+The Back-end is considered as the software and database that runs on a server hosted by the IFI \cite{ifi}. The Front-end/client communicates with the Back-end using RESTful services described in section \ref{sec:restfulapi} below.\newline
+The project is structured according to the rules of Domain Driven Design (DDD) \cite{ddd}. The domain model, that consists of the concepts, is connected to the database. Changes on the model will be automatically synchronized with the database. The service package lists all methods for a specific domain model.\newline The DTO (Data Transfer Object) transfers the data from back-end to the front-end and vice versa.
+
+\subsection{Multilayer architecture}
+We use a common \textit{Multilayer architecture} (see figure \ref{fig:architecture-layer}) to provide a good overview of the entire software-code. The following four layers are used:
+\begin{itemize}
+    \item \textbf{Presentation Layer} provides the front-end code for the GUI creation. It uses \textit{AngularJS} for the GUI creation. The \textit{Presentation Layer} interacts with the \textit{Application Layer}.
+    \item \textbf{Application Layer} provides the available services that interact with the \textit{Business Layer}. It hosts the Security, RESTful services and the Global Exceptions.
+    \item \textbf{Business Layer} provides the available services that interact with the \textit{Data Access Layer}. It provides the relevant services and models based on the \textit{Data Access Layer}.
+    \item \textbf{Data Access Layer} consists of repositories and the \textit{Hybernate} database. 
+\end{itemize}
+
+
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.80\textwidth]{architecture-layer}}
+    \caption{Architecture: Multilayer architecture}
+    \label{fig:architecture-layer}
+\end{figure}
 
 \section{Technologies}
 
-In the following section the technologies used on the reimbursement tool are being described.
+In the following section the technologies used on the reimbursement-tool are being described detail.
 
-\subsection{Backend}
+\subsection{Back-end}
 
 \subsubsection{Java}
-The tool uses Java SE 7 for the Backend programming language. Java is an industry wide standard, has detailed documentation and sufficient knowledge at the IFI \cite{ifi} department to guarantee an adequate support and future development of the software.
+The reimbursement-tool uses Java SE 7 for the Back-end programming language. Java is an industry wide standard, has detailed documentation and sufficient knowledge at the IFI \cite{ifi} department to guarantee an adequate support and future development of the software.
 
 \subsubsection{Hibernate}
 Hibernate abstracts the data layer. So that SQL-queries have to be written in rare cases only, which increases the code-clarity and decreases the code-complexity which can lead to bugs and errors. All data operation are handled implicitly by defined Java data classes.\newline
 H2 database is a temporary database for storing data in a database environment. It offers a simple interface and can be used for developing, if only one development server database is available. \cite{hibernate}
 
 \subsubsection{Java Spring Framework}
-Spring Data reduce the overhead of building the repository access layer. Besides the Spring MVC it provides the REST interface. \cite{spring}
+The reimbursement-tool uses various services of the Java Spring Framework \cite{spring}:
+\begin{itemize}
+    \item Spring Security for the login- and user-management as well as role based access-management for the RESTful resources.
+    \item Spring Web MVC framework used to define RESTful interface within a few lines of code.
+    \item Spring ORM used for the XML mapping within the process of Pdf-generation.
+    \item Spring data is used to provide a simpler method to use data access technologies. It uses the DAO (Data Access Object) \cite{dao} to access data in a standard database like SQL. 
+\end{itemize}
 
 \subsubsection{Maven}
-The tool uses Apache Maven \cite{maven} for the build process and dependency management.
+The tool uses Apache Maven \cite{maven} for the build process and dependency management.  
 
 \subsubsection{Mockito}
 The tool uses the Mockito framework to mock services. It can be used to write tests with a clean and simple API. Further it's easy to integrate with the Java Spring Testing framework. \cite{mockito}
@@ -42,7 +67,7 @@ The Swagger UI visualizes all methods provided by the REST interface within a GU
     \label{fig:swagger01}
 \end{figure}
 
-\subsection{Frontend}
+\subsection{Front-end}
 
 \subsubsection{AngularJS}
 The tool uses the AngularJS framework for the client. Its data bindings and dependency injections reduces the amount of code need to be written. Further it uses HTML templates and a routing framework to create an interactive GUI. AngularJS is based on an MVC approach and is easy to integrate with REST services. \cite{angular}   
