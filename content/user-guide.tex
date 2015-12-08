@@ -5,7 +5,7 @@
 
 \subsection{Step 1}
 The reimbursement-tool is connected to the UZH-IFI LDAP server. This allows employees of the IFI department to use their existing login-credentials provided by the University of Zurich to login to the reimbursement-tool.\newline
-After the initial login a user needs to pass a two-step registration process. On Figure \ref{fig:registration-step01} the user needs to input two values:
+After the initial login a user needs to pass a two-step registration process. On figure \ref{fig:registration-step01} the user needs to input two values:
 \begin{itemize}
     \item UZH personnel number is the employee number, written on the employment card. It is of the form \textit{01-123-456}. Enter the number without the leading 0 and hyphens; i.e. \textit{123456}.
     \item UZH phone number is the personnel phone number of the employee. Please enter it in the form \textit{0441234567}.
@@ -20,7 +20,7 @@ After the initial login a user needs to pass a two-step registration process. On
 \end{figure}
 
 \subsection{Step 2}
-On Figure \ref{fig:registration-step02} the user needs to add his handwritten signature either by uploading an image or capture it using a third party touchscreen device, like a smart phone. This signature is required to sign the generated Pdf document containing all \textit{Receipts}.
+On figure \ref{fig:registration-step02} the user needs to add his handwritten signature either by uploading an image or capture it using a third party touchscreen device, like a smart phone. This signature is required to sign the generated Pdf document containing all \textit{Receipts}.
 
 \begin{figure}[H]
     \centering
@@ -40,7 +40,7 @@ The \textit{Registered user} has to create an \textit{Expense}, add \textit{Rece
 
 \subsection{Create Expense}
 
-To create an \textit{Expense}, the user needs to navigate to the \textbf{Dashboard} and click on the button \textbf{Create new Expense}. A modal-window will appear to enter an SAP description.\newline Once the \textit{SAP description} is entered correctly and the user clicked \textbf{Next} an empty \textit{Expense} will be created. The user can start with adding \textit{Receipts} (Figure \ref{fig:expensesitems-overview}).
+To create an \textit{Expense}, the user needs to navigate to the \textbf{Dashboard} and click on the button \textbf{Create new Expense}. A modal-window will appear to enter an SAP description.\newline Once the \textit{SAP description} is entered correctly and the user clicked \textbf{Next} an empty \textit{Expense} will be created. The user can start with adding \textit{Receipts} (see figure \ref{fig:expensesitems-overview}).
 
 \begin{figure}[H]
     \centering
@@ -66,7 +66,7 @@ By adding a new \textit{Receipt} or editing an existing one, the user needs to f
     \item \textbf{Receipt attachment} used for verification purpose of the entered \textit{Receipt} data.
 \end{itemize}
 
-See Figure \ref{fig:expenses-add01} for details.
+See figure \ref{fig:expenses-add01} for details.
 
 
 \begin{figure}[H]
@@ -105,8 +105,23 @@ Every \textit{Expense} is always in one of the following states during the proce
     
 \end{itemize}
 
-\subsection{Digital signature}
-tbd
+\subsection{Sign document}
+\label{sec:signing}
+The signing is needed for the generation of the Pdf that contains all of the captures \textit{Expenses} and \textit{Receipts}. This Pdf uses the signatures of the respective \textit{User}, \textit{Manager} and \textit{Finance admin} to proof their acceptance of the captures \textit{Expenses} and \textit{Receipts}. During the signing process the user will be prompted to select his preferred signing method (see figure 3.5). The two different types available will be explained in detail:
+    \begin{itemize}
+        \item A \textbf{Digital signature} ensure the authenticity of the signer. Any changes made to the document after it has been signed will invalidate the signature. To use the \textit{Digital signature} the user has to provide his private key to successfully sign the document.
+        \item \textbf{Electronic signature} does not ensure the authenticity of the signer. Anyone can theoretically make changes on the document after it has been signed without the signature become invalid. To use it, the user only has to add his handwritten signature.
+    \end{itemize}
+    
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.80\textwidth]{expenses-sign}}
+    \caption{Expense: Sign document}
+    \label{fig:expense-sign}
+\end{figure}
+
+Please note, that if a signing method has been selected all subsequent signers, like \textit{Manager} and \textit{Finance management} have to apply the same method.
+
 
 \section{User}
 
@@ -162,16 +177,27 @@ For the \textit{Finance management} a sophisticated search interface for \textit
     \label{fig:admin-search}
 \end{figure}
 
-\subsection{Archive}
-Besides the \textit{Admin Pool Search} there exists an archive interface for all users. The archive provides a list of all \textit{Expenses} in \textit{Printed} state that the current user has created.  
+The \textit{Finance admin} is authorized to override the following \textit{Expense} states:
+\begin{itemize}
+\item \textbf{Reassign}: If the \textit{Expense} is in \textit{Printed} state, it can be reassigned to the \textit{Finance admin}.
+\item \textbf{Reset}: During the 1. Iteration (see section \ref{sec:process}) the \textit{Expense} can be reset to send it back to the creator. The \textit{Expense} state will change to \textit{Draft}. 
+\end{itemize}
 
-\section{Process}
+\subsection{Archive}
+Besides the \textit{Admin Pool Search} there exists an archive interface for all users. The archive provides a list of all \textit{Expenses} in \textit{Printed} state that the current user has created.\newpage  
+
+\section{Expense process}
 \label{sec:process}
-As described in \ref{sec:states} an \textit{Expense} is always in one specific state. The entire process implemented in the system is shown in Figure \ref{fig:process-diagram}. The process is visualized using the BPML. Four lanes point out the available user roles. The process starts in the first lane; an \textit{Expense} is created, \textit{Receipts} are added and it is forwarded to the next higher instance for verification. After verifications by the \textit{Manager} or \textit{Department manager} and \textit{Finance administration} are successful, the user, \textit{Manager} and the \textit{Finance administration} needs to sign the document. If all users signed the document, it is ready to be printed by the user who created the \textit{Expense}.
+
+The entire process is basically divided into three iterations. The \textbf{1. iteration}; Expense creation, \textbf{2. iteration}; the Expense signing, the \textbf{3. iteration}; print and carry the documents to the finance administration of the University of Zurich.\newline 
+Expense date, cost category, amount, explanation and attachment will be captured by the user to initiate the first iteration. As soon as the user is done with the capturing the Expense will be assigned to the \textit{Manager}. He reviews the Expense, adds the respective projects and assigns the Expense to the next instance for review; the \textit{Finance Management}. If they are satisfied the Expense moves into the second iteration; the signing. For more detailed information containing the signing refer to section \ref{sec:signing}.\newline
 
 \begin{figure}[H]
     \centering
-    \fbox{\includegraphics[width=0.80\textwidth]{process-diagram}}
-    \caption{Expense: Workflow process}
-    \label{fig:process-diagram}
+    \fbox{\includegraphics[width=0.80\textwidth]{expense-process}}
+    \caption{Expense: Process of expense creation}
+    \label{fig:expense-process}
 \end{figure}
+
+After the signing is completed by all instances. The \textit{Expense} will be available to print by its creator. As soon as all the documents are printed, they need to be carried to the respective \textit{Finance admin} for further processing. The \textit{Finance admin} will send all relevant documents to the finance adminstration of the University of Zurich. This action completes the process.   
+

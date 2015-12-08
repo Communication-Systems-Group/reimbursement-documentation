@@ -14,14 +14,24 @@ We use a common \textit{Multilayer architecture} (see figure \ref{fig:architectu
     \item \textbf{Data Access Layer} consists of repositories and the \textit{Hybernate} database. 
 \end{itemize}
 
-
-
 \begin{figure}[H]
     \centering
     \fbox{\includegraphics[width=0.80\textwidth]{architecture-layer}}
     \caption{Architecture: Multilayer architecture}
     \label{fig:architecture-layer}
 \end{figure}
+
+\subsection{Processflow}
+\label{sec:processflow}
+As described in \ref{sec:states} an \textit{Expense} is always in one specific state. The entire process implemented in the system is shown in figure \ref{fig:process-diagram}. The process is visualized using the BPML. Four lanes point out the available user roles. The process starts in the first lane; an \textit{Expense} is created, \textit{Receipts} are added and it is forwarded to the next higher instance for verification. After verifications by the \textit{Manager} or \textit{Department manager} and \textit{Finance administration} are successful, the user, \textit{Manager} and the \textit{Finance administration} needs to sign the document. If all users signed the document, it is ready to be printed by the user who created the \textit{Expense}.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.80\textwidth]{process-diagram}}
+    \caption{Architecture: Processflow}
+    \label{fig:process-diagram}
+\end{figure}
+
 
 \section{Technologies}
 
@@ -58,7 +68,7 @@ The tool uses the Mockito framework to mock services. It can be used to write te
 The tool uses a RESTful API that provides methods to access the Backend resources. It is implemented using the Spring MVC. 
 
 \subsubsection{Swagger UI}
-The Swagger UI visualizes all methods provided by the REST interface within a GUI. Furthermore developers can interact directly with the interface to test the methods. Figure \ref{fig:swagger01} shows a screenshot of our used Swagger interface. It visualizes all the available methods for the \texttt{public} resource as well as the mandatory and optional parameters for \texttt{HTTP} calls. This was important for the process of development. \cite{swagger}
+The Swagger UI visualizes all methods provided by the REST interface within a GUI. Furthermore developers can interact directly with the interface to test the methods. figure \ref{fig:swagger01} shows a screenshot of our used Swagger interface. It visualizes all the available methods for the \texttt{public} resource as well as the mandatory and optional parameters for \texttt{HTTP} calls. This was important for the process of development. \cite{swagger}
 
 \begin{figure}[H]
     \centering
