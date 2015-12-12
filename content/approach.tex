@@ -1,12 +1,39 @@
 \chapter{Approach}
 
+\section{System context}
+
+The reimbursement-tool interacts with multiple actors and other software interfaces. In this section those interactions will be defined in detail.
+
+\subsection{Context diagram}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.80\textwidth]{context-diagram}}
+    \caption{System context: Context diagram}
+    \label{fig:context-diagram}
+\end{figure}
+
+The context diagram (see figure \ref{fig:context-diagram}) describes the important relationships between the system and its interrogators. \textit{Expense creator} such as normal employees or even professors can create expenses and print them. However, they are not allowed to modify an expense if it is not in draft state anymore. Further only managers and \textit{Finance admin} are allowed to \textit{Reject expenses} back to the \textit{Expense creator}.\newline
+\textit{Guests} are allowed to view specific expenses. However, they need the 32-character long internal expense name id to gain access to it. This is only possible if a guest has access to the printed expense document. All other interrogators have access to all expenses they have to work with.
+
+\subsubsection{LDAP dependency}
+
+The system fetches the user data from the UZH-IFI LDAP server. This is necessary to synchronize the user database, to allow IFI users use the system without creating a new user name and password to access the systems functionality. Currently the synchronisation interval is defined to take part every 300 Seconds. By changing the 
+value of \textit{reimbursement.ldap.refreshRate} on the file \textit{application.properties} stored at the 
+back-end in the directory \textit{src/main/resources}. 
+
 \section{Architecture}
 
-The Back-end is considered as the software and database that runs on a server hosted by the IFI \cite{ifi}. The Front-end/client communicates with the Back-end using RESTful services described in section \ref{sec:restfulapi} below.\newline
-The project is structured according to the rules of Domain Driven Design (DDD) \cite{ddd}. The domain model, that consists of the concepts, is connected to the database. Changes on the model will be automatically synchronized with the database. The service package lists all methods for a specific domain model.\newline The DTO (Data Transfer Object) transfers the data from back-end to the front-end and vice versa.
+The Back-end is considered as the software and database that runs on a server hosted by the IFI \cite{ifi}. The Front-end/client communicates with the Back-end using RESTful services described in section \ref{sec:restfulapi}.\newline
+
+\subsection{Back-end}
+The back-end is developed in Java. It is structured according to the rules of Domain Driven Design (DDD) \cite{ddd}. The domain model, that consists of the concepts, is connected to the database. Changes on the model will be automatically synchronized with the database. The service package lists all methods for a specific domain model.\newline DTOs (Data Transfer Object) are used to transfers data from back-end to front-end and vice verse. \newline The implemented model- and service-classes are visualized in the appendix \ref{sec:app-models} and \ref{sec:app-service}  
+
+\subsection{Front-end}
+The front-end is developed in JavaScript. It is based on the MVC (Model View Controller) pattern.   
 
 \subsection{Multilayer architecture}
-We use a common \textit{Multilayer architecture} (see figure \ref{fig:architecture-layer}) to provide a good overview of the entire software-code. The following four layers are used:
+We use a common \textit{Multilayer architecture} (see figure \ref{fig:architecture-layer}) in the back-end to provide a good overview of the entire software-code. The following four layers are used:
 \begin{itemize}
     \item \textbf{Presentation Layer} provides the front-end code for the GUI creation. It uses \textit{AngularJS} for the GUI creation. The \textit{Presentation Layer} interacts with the \textit{Application Layer}.
     \item \textbf{Application Layer} provides the available services that interact with the \textit{Business Layer}. It hosts the Security, RESTful services and the Global Exceptions.
@@ -21,9 +48,13 @@ We use a common \textit{Multilayer architecture} (see figure \ref{fig:architectu
     \label{fig:architecture-layer}
 \end{figure}
 
+Our layers depend on each other while every layer communicates only with either the upper or the lower layer. This ensures a good maintainability and loose coupling of the single layers.\newline 
+For example: If the presentation layer needs to display an expense, the application layer will handle this request by first checking the relevant security parameter of the request followed by calling the business layer. The service will handle and aggregate the desired information fetched from the relevant models. In our case to display an expense, the service will retrieve all expense-items and expense-item-attachments.
+
+
 \subsection{Processflow}
 \label{sec:processflow}
-As described in \ref{sec:states} an \textit{Expense} is always in one specific state. The entire process implemented in the system is shown in figure \ref{fig:process-diagram}. The process is visualized using the BPML. Four lanes point out the available user roles. The process starts in the first lane; an \textit{Expense} is created, \textit{Receipts} are added and it is forwarded to the next higher instance for verification. After verifications by the \textit{Manager} or \textit{Department manager} and \textit{Finance administration} are successful, the user, \textit{Manager} and the \textit{Finance administration} needs to sign the document. If all users signed the document, it is ready to be printed by the user who created the \textit{Expense}.
+As described in \ref{sec:states} an expense is always in one specific state. The entire process implemented in the system is shown in figure \ref{fig:process-diagram}. The process is visualized using the BPML. Four lanes point out the available user roles. The process starts in the first lane; an expense is created, \textit{Receipts} are added and it is forwarded to the next higher instance for verification. After verifications by the \textit{Manager} or \textit{Department manager} and \textit{Finance administration} are successful, the user, \textit{Manager} and the \textit{Finance administration} needs to sign the document. If all users signed the document, it is ready to be printed by the user who created the expense.
 
 \begin{figure}[H]
     \centering
@@ -61,6 +92,11 @@ The tool uses Apache Maven \cite{maven} for the build process and dependency man
 \subsubsection{Mockito}
 The tool uses the Mockito framework to mock services. It can be used to write tests with a clean and simple API. Further it's easy to integrate with the Java Spring Testing framework. \cite{mockito}
 
+\subsubsection{FOP-Apache}
+After the process completion, the captured expenses need to printed on two A4 pages in landscape format. The structure of the sheets are predefined by the university. The generated Pdf by the reimbursement-tool needs to be identical to the existing MS-Office Excel file. See appendix \ref{sec:app-pdf} for the generated Pdf structure.\newline
+The Pdf get generated using an individual created XSLT template and a XML document generated out of a Java Object. Combining these two files generates an FO document, which will be used by Apache FOP \cite{apache-fop} to generate a Pdf.\newline
+We decided for Apache FOP because it is based on widely used standards like XML and XSL so that ongoing maintenance can be easily and without specific knowledge achieved.
+
 \subsection{Interface}
 
 \subsubsection{RESTful API}
@@ -89,5 +125,4 @@ Bootstrap is a framework that consists of HTML, CSS and JavaScript elements that
 The tool uses Bower for the client-side package management. Bower is a package manager for JavaScript web applications like AngularJS. It keeps track of the used assets, frameworks, libraries, etc. \cite{bower}  
 
 \subsubsection{Grunt}
-Grunt is a JavaScript task runner. We use it for our client-side build. Its plugin directory supports a lot of modules to optimize the development workflow. Code-uglifying, concating, sass-compiling, file operations, autoprefixing etc. \cite{grunt} 
-
+Grunt is a JavaScript task runner. We use it for our client-side build. Its plugin directory supports a lot of modules to optimize the development work flow. Code-uglifying, concating, sass-compiling, file operations, auto prefixing etc. \cite{grunt} 

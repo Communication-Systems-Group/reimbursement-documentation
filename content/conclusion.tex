@@ -1,2 +1,21 @@
-\chapter{Conclusion}
+\chapter{Conclusions}
+
+\section{Summary}
+
+The reimbursement process at the IFI department of the University of Zurich was based on a single MS-Office Excel file that has been used to capture the receipt expenses and pass them physically through the entire process reimbursement process. For the participants it was difficult because they had to pass the digital Excel file and the physical receipts to the next member in the process. The extra effort needed and increasing digitization lead to the idea of digitize the entire process based on a single system.\newline
+The reimbursement-tool was developed in order to reduce the effort needed of the participants in the process and to increase the efficiency and flexibility in capturing receipts, by allowing the user to add them on the go with a smart phone. Besides that, the finance administration of the IFI department will have analytical tools to have a better insight knowledge of the reimbursement process and the integrated search engine allows them to search for and retrieve archived expenses within seconds. 
+
+
+\section{Future work}
+
+The current implementation of the reimbursement-tool covers the basic features to run the entire reimbursement-process at the IFI digitally. However, there is still some future work available. Those will be addressed in the following subsections. 
+
+\subsection{Digital signature}
+Currently the private key for the digital signature has to be pasted manually by the user to sign a document digitally. This needs to be improved, in a way that the private key will be loaded automatically and without any copy/paste actions. The current implementation of the WebCrypto Key Discovery API does not allow the discovery of private keys due to privacy issues with those keys \cite{webcrypto}. 
+
+\subsection{Pdf version 1.5}
+During the development of the reimbursement-tool a new version of the Pdf document that needs to be delivered to the finance administration of the University of Zurich was published. This needs to be updated in a future step. 
+
+\subsection{Process integration to UZH}
+Currently the expenses will be printed and delivered to the financial administration of the University of Zurich in paper format. Those expenses in turn will be scanned to be digitalized and archived at the financial administration of the University of Zurich. If this media disruption could be suspended, the overall process flow would increase the efficiency.
 

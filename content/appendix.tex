@@ -61,38 +61,38 @@ To deploy the software from the local running copy to the server running a Tomca
     \item Store the credentials of the Tomcat7 instance and productive database in the maven directory. The maven directory is stored mostly on the local machines user directory in the \texttt{.m2/settings.xml} file. The file needs to have the following structure:
 
     \begin{lstlisting}
-    <?xml version="1.0" encoding="UTF-8"?>
-        <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0      
+        xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
         http://maven.apache.org/xsd/settings-1.0.0.xsd">
-        	<servers>
-        		<server>
-        			<id>reimbursement-server</id>
-        			<username></username>
-        			<password></password>
-        		</server>
-        	</servers>
-        	<profiles>
-        		<profile>
-        			<id>reimbursement_int</id>
-        			<properties>
-        				<jdbc.username></jdbc.username>
-        				<jdbc.password></jdbc.password>
-        			</properties>
-        		</profile>
-        		<profile>
-        			<id>reimbursement_prod</id>
-        			<properties>
-        				<jdbc.username></jdbc.username>
-        				<jdbc.password></jdbc.password>
-        			</properties>
-        		</profile>
-        	</profiles>
-        </settings>
+    	<servers>
+    		<server>
+    			<id>reimbursement-server</id>
+    			<username></username>
+    			<password></password>
+    		</server>
+    	</servers>
+    
+    	<profiles>
+    		<profile>
+    			<id>reimbursement_int</id>
+    			<properties>
+    				<jdbc.username></jdbc.username>
+    				<jdbc.password></jdbc.password>
+    			</properties>
+    		</profile>
+    		<profile>
+    			<id>reimbursement_prod</id>
+    			<properties>
+    				<jdbc.username></jdbc.username>
+    				<jdbc.password></jdbc.password>
+    			</properties>
+    		</profile>
+    	</profiles>
+    </settings>
     \end{lstlisting}
     
-    Add the respective usernames and passwords on the document.
+    Add the respective user name and password values to login properly.
     
     \item To configure the deployment right click to the server project in Eclipse -> Run As -> Maven Build... and enter the following values in the corresponding input fields:
     \newline
@@ -120,6 +120,32 @@ To deploy the software from the local running copy to the server running a Tomca
     \item Open a command line tool and run \texttt{grunt deploy}. This will automatically deploy the frontend to the server. 
 
 \end{itemize}
+
+\chapter{}
+
+\section{Models}
+\label{sec:app-models}
+
+\begin{figure}[H]
+    \centering
+    {\includegraphics[width=1.0\textwidth]{umlclass-model}}
+\end{figure}
+
+\section{Services}
+\label{sec:app-service}
+
+\begin{figure}[H]
+    \centering
+    {\includegraphics[width=0.95\textwidth]{umlclass-service}}
+\end{figure}
+
+\section{PDF}
+\label{sec:app-pdf}
+
+\begin{figure}[H]
+    \centering
+    {\includegraphics[width=0.95\textwidth]{pdf}}
+\end{figure}
 
 \chapter{Software source-code}
 
