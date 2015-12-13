@@ -30,7 +30,6 @@ On figure \ref{fig:registration-step02} the user needs to add his handwritten si
 \end{figure}
 
 After completing the registration process, these captured information and signature can always be edited by navigation to the \textbf{Settings} on the navigation bar.
-\clearpage
 
 \section{Expenses}
 
@@ -79,32 +78,6 @@ See figure \ref{fig:expenses-add01} for details.
 \subsection{Assign Expense to Professor}
 If all receipts are captured, the expense will be assigned to the \textit{Manager} in charge. Once the assignment is processed, the expense cannot be edited by the user anymore. To assign an expense to the \textit{Manager}, click on the \textbf{Submit to Manager} button.
 
-\subsection{States}
-\label{sec:states}
-Every expense is always in one of the following states during the process:
-
-\begin{itemize}
-    \item \textbf{Draft} state occurs if the expense is created and yet has not been assigned to a \textit{Manager}.
-    
-    \item \textbf{To be assigned} state occurs if the expense is submitted to the \textit{Manager} but has not been assigned to a specific \textit{Manager}.
-    
-    \item \textbf{Assigned to Manager} state occurs if the expense is submitted to the \textit{Manager} and has been assigned to a specific \textit{Manager}.
-    
-    \item \textbf{Assigned to Finance Admin} state occurs if the expense is submitted to the \textit{Manager} and has been assigned to a specific \textit{Finance admin}.
-    
-    \item \textbf{Rejected} state occurs if the created expense is not accepted by the \textit{Manager}, \textit{Department manager} or \textit{Finance management}. In \textbf{Rejected} status the expense will be reassigned to the user who created it.
-    
-    \item \textbf{Signed} state occurs if the expense has been signed by all participants; \textit{Registered user}, \textit{Manager} or \textit{Department manager} and \textit{Finance management}. There exist sub states that occur if the expense is in the process of being signed by all participants:
-        \begin{itemize}
-            \item \textbf{To be signed by \textit{User}} occurs if the expense needs to be signed by the \textit{User}.
-            \item \textbf{To be signed by \textit{Manager}} occurs if the expense needs to be signed by the \textit{Manager}.
-            \item \textbf{To be signed by \textit{Finance admin}} occurs if the expense needs to be signed by the \textit{Finance admin}.
-        \end{itemize}
-    
-    \item \textbf{Printed} state occurs if the expense and all its receipts are successfully converted into a digital document.
-    
-\end{itemize}
-
 \subsection{Sign document}
 \label{sec:signing}
 The signing is needed for the generation of the Pdf that contains all of the captures \textit{Expenses} and receipts. This Pdf uses the signatures of the respective \textit{User}, \textit{Manager} and \textit{Finance admin} to proof their acceptance of the captures \textit{Expenses} and receipts. During the signing process the user will be prompted to select his preferred signing method (see figure 3.5). The two different types available will be explained in detail:
@@ -123,7 +96,8 @@ The signing is needed for the generation of the Pdf that contains all of the cap
 Please note, that if a signing method has been selected all subsequent signers, like \textit{Manager} and \textit{Finance management} have to apply the same method.
 
 
-\section{User}
+\section{User roles}
+\label{user-roles}
 
 Every user that exists in the LDAP of the University of Zurich is capable to login to the system. He can use the same user name and password that he uses for the other University of Zurich services for login. See Section \ref{sec:registration} for more details.
 
