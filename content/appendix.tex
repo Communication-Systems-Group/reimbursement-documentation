@@ -50,6 +50,16 @@ Grunt builds the front-end files. It has multiple modules to build: you can conc
 
 Document how to deploy/update and change crucial settings (ldap, costcategories, etc.)
 
+\subsubsection{LDAP}
+\label{subsubsec:ldap}
+
+Currently the synchronisation interval is defined to take part every 300 Seconds. By changing the value of \textit{reimbursement.ldap.refreshRate} on the file \textit{application.properties} stored at the back-end in the directory \textit{src/main/resources}. 
+
+\subsubsection{E-mail server}
+\label{subsubsec:email}
+
+The currently used e-mail settings can be adjusted at the \textit{application.properties} file in the back-end.
+
 \section{Deployment}
 
 \subsection{Backend}
@@ -142,6 +152,13 @@ To deploy the software from the local running copy to the server running a Tomca
 
 \begin{figure}[H]
     {\includegraphics[width=0.8\textwidth]{process-diagram-rotated}}
+\end{figure}
+
+\section{State diagram}
+\label{sec:state-diagram}
+
+\begin{figure}[H]
+    {\includegraphics[width=0.8\textwidth]{state-diagram}}
 \end{figure}
 
 \section{PDF}
