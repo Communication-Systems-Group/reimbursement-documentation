@@ -93,7 +93,6 @@ During the process an expense passes through various states. An expense is alway
     \item \textbf{PRINTED} state occurs if the expense and all its receipts are successfully converted into a digital document.
     
     \item \textbf{ARCHIVED} state occurs if the expense has been printed.
-    
 \end{itemize}
 
 The names of the various states are coupled with the user roles. For example \textbf{ASSIGNED\_TO\_FINANCE\_ADMIN} implies that the expense is assigned to all users with roles \textit{Finance management}.
@@ -101,10 +100,10 @@ The names of the various states are coupled with the user roles. For example \te
 \subsection{E-mail notification}
 To inform the users of the reimbursement-tool about expense state changes, e-mail notifications have been implemented to notify affected users immediately. E-mail notifications are executed at the following actions:
 \begin{itemize}
-\item An expense that has been created by a user and is assigned to a \textit{Manager}, will send an e-mail to the respective \textit{Manager}.
-\item An expense that has been approved by the \textit{Manager} and enters the state \newline \textbf{TO\_BE\_ASSIGNED}, will send an e-mail to all available users with role \textit{Finance management}.
-\item An expense that needs to go through the signing process, will send an e-mail to notify every user who needs to sign the document.
-\item If an expense is rejected by a \textit{Manager} or \textit{Finance management} the \textit{Creator} of the expense will receive an e-mail notification.
+    \item An expense that has been created by a user and is assigned to a \textit{Manager}, will send an e-mail to the respective \textit{Manager}.
+    \item An expense that has been approved by the \textit{Manager} and enters the state \newline \textbf{TO\_BE\_ASSIGNED}, will send an e-mail to all available users with role \textit{Finance management}.
+    \item An expense that needs to go through the signing process, will send an e-mail to notify every user who needs to sign the document.
+    \item If an expense is rejected by a \textit{Manager} or \textit{Finance management} the \textit{Creator} of the expense will receive an e-mail notification.
 \end{itemize}
 
 Besides state changes, e-mails will also be sent to an administrator if a general run-time exception occurs. To ensure the administrator of the reimbursement-tool is up-to date about major incidents.
@@ -129,7 +128,7 @@ We decided to use the \textit{Spring Framework} because it's well documented, wi
     \item Spring Security for the login- and user-management as well as role based access-management for the RESTful resources.
     \item Spring Web MVC framework used to define RESTful interface within a few lines of code.
     \item Spring ORM used for the XML mapping within the process of Pdf-generation.
-    \item Spring data is used to provide a simpler method to use data access technologies. It uses the DAO (Data Access Object) \cite{dao} to access data in a standard database like SQL. 
+    \item Spring data is used to provide a simpler method to use data access technologies. It uses the DAO (Data Access Object) \cite{dao} to access data in a standard database like SQL.
 \end{itemize}
 
 \subsubsection{Maven}
