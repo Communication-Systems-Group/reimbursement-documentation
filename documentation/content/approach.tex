@@ -37,7 +37,7 @@ The back-end is considered as the software and database running on a Tomcat \cit
 
 \subsection{Back-end}
 The back-end is developed in Java. It is structured according to the rules of Domain Driven Design (DDD) \cite{ddd}. The domain model, that consists of the concepts, is connected to the database. Changes on the model will be automatically synchronized with the database. The service package lists all methods that are used on a domain model.\newline 
-DTOs (Data Transfer Object) are used to transfers data from back-end to front-end and vice verse. \newline The implemented model- and service-classes are visualized in the appendix \ref{sec:app-models} and \ref{sec:app-service}  
+DTOs (Data Transfer Object) are used to transfers data from back-end to front-end and vice verse. \newline The implemented model- and service-classes are visualized in appendix \ref{sec:app-models} and \ref{sec:app-service}  
 
 \subsection{Front-end}
 The front-end is developed in JavaScript using the AngularJS \cite{angular} framework. AngularJS is based on an MVC (Model View Controller) pattern. It basically consists of controllers, templates used for the view, as well as models representing the data that is shown to the user using the templates. However, AngularJS \cite{angular} extends the basic MVC concept with useful enhancements like directives, filters, injectors etc. A complete list of the available concepts in AngularJS and small examples can be found at the AgngularJS: Developer Guide \cite{angular-devguide}.   
@@ -107,6 +107,31 @@ To inform the users of the reimbursement-tool about expense state changes, e-mai
 \end{itemize}
 
 Besides state changes, e-mails will also be sent to an administrator if a general run-time exception occurs. To ensure the administrator of the reimbursement-tool is up-to date about major incidents.
+
+
+\section{User roles}
+\label{user-roles}
+
+The system maps the users available in the IFI LDAP server. So every user that exists in the LDAP is capable to login to the system. He can use the same user name and password that he uses for the other University of Zurich services for login. \par
+
+The reimbursement-tool provides different user roles. Also the roles on the reimbursement-tool are mapped with the LDAP user roles of the University of Zurich. So a user who is defined as professor for a specific group on the LDAP will be the manager for all users of this group. The reimbursement-tool provides the roles with the following authorizations to alter expenses:
+
+\begin{itemize}
+    \item \textbf{Unregistered user} are users, who are authorized to login the reimbursement-tool but have not yet completed the registration process.
+    \item \textbf{Registered user / User} passed the registration process. He can access the reimbursement-tool and create and manage his created expenses. He has one of the following roles:
+    
+    \begin{itemize}
+        \item \textbf{Creator} is authorized to create and edit expenses as long as they are in DRAFT state.
+        
+        \item \textbf{Manager / Professor} are authorized to reject, accept and edit expenses as long as it is assigned to him.
+        
+        \item \textbf{Department manager} has the same authorizations as the \textit{Manager}. If a \textit{Manager} is outreach, his assignments will be forwarded to the respective \textit{Department manager}.
+        
+        \item \textbf{Finance management} is authorized to reject, accept and edit expenses once they have been accepted by a \textit{Manager} or \textit{Department manager}. Furthermore they can manage the available cost categories and search for expenses.
+        
+        \item \textbf{Head of institute} has the same authorizations as the \textit{Manager}. In contrast to the \textbf{Department manager} there exists only one \textit{Head of institute}.
+    \end{itemize}
+\end{itemize}
     
 
 \section{Technologies}
@@ -119,7 +144,7 @@ In the following section the technologies used are being described and explained
 The reimbursement-tool uses Java SE 7 for the back-end programming language. Java is an industry wide standard, has detailed documentation and there is sufficient knowledge at the IFI department to guarantee an adequate support and further development of the software.
 
 \subsubsection{Hibernate}
-Hibernate abstracts the data layer. So that SQL-queries have to be written in rare cases only, which increases the code-clarity and decreases the code-complexity. All data operation are handled implicitly by defined Java data classes.\newline
+\textit{Hibernate} abstracts the data layer. So that SQL-queries have to be written in rare cases only, which increases the code-clarity and decreases the code-complexity. All data operation are handled implicitly by defined Java data classes.\newline
 H2 database is a temporary database for storing data in a database environment. It offers a simple interface and can be used for development, given that only one development database server is available. \cite{hibernate}
 
 \subsubsection{Java Spring Framework}
@@ -138,6 +163,17 @@ The tool uses Apache Maven \cite{maven} for the build process and dependency man
 The generated Pdf by the reimbursement-tool needs to be identical to the existing MS-Office Excel-Pdf file provided by the Finance Administration of the University of Zurich. The generated Pdf structure is added in \ref{sec:app-pdf}.\newline
 The Pdf gets generated using an individual created XSLT template and a XML document generated out of a Java Object. Combining these two files generates an \textit{.fo} document, which will be used by Apache FOP \cite{apache-fop} to generate the Pdf.\par
 We decided for Apache FOP because it is based on widely used standards like XML and XSL so that ongoing maintenance can be achieved easily and without specific knowledge required.
+
+\subsubsection{Digital signature}
+The ability to sign the printed Pdf document is crucial so that authenticity is provided. Especially if the Pdf document will be used as evidence by the Finance Administration of the University of Zurich. However, in the current implementation of the system, there is only an electronic signature available (refer to section \ref{sec:future-work}). The system is prepared to implement the digital signature method. \par
+
+All involved participants need to sign the document; \textit{Creator}, \textit{Manager} and \textit{Finance management} to proof their acceptance of the expense and the captured receipts. \par 
+
+We define the two signature types as follow \cite{arx-signature}:
+\begin{itemize}
+    \item A \textbf{Digital signature} ensure the authenticity of the signer. Any changes made to the document after it has been signed will invalidate the signature. To use it the user has to provide his private key to successfully sign the document.
+    \item \textbf{Electronic signature} does not ensure the authenticity of the signer. Anyone can theoretically make changes on the document after it has been signed without the signature become invalid. The handwritten signature captured during the registration will be stamped on the Pdf document.
+\end{itemize}
 
 \subsection{Interface}
 
