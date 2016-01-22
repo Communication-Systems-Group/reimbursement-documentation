@@ -12,13 +12,8 @@ Overall the system works. Expenses can be created, modified, deleted and passed 
 
 The current implementation of the reimbursement-tool covers the basic features to run the entire reimbursement-process at the IFI digitally. However, there is still some future work to be done, which will be addressed in the following subsections. 
 
-\subsection{Digital signature}
-Currently the private key for the digital signature has to be copy/pasted manually by the user to sign a document digitally. This needs to be improved in a way, that the private key will be loaded automatically and without any copy/paste actions. The current implementation of the WebCrypto Key Discovery API does not allow the discovery of private keys due to privacy issues with those keys \cite{webcrypto}. \par
-We look forward, that those described changes will be implemented in the near future to improve the signing use case.
-
 \subsection{Pdf version 1.5}
-During the development of the reimbursement-tool a new version of the Pdf document, that needs to be delivered to the Finance Administration of the University of Zurich, was published. Obviously the new requirements need to be implemented in a future step. 
+During the development of the reimbursement-tool a new version of the Pdf document, that needs to be delivered to the Finance Administration of the University of Zurich, was published. Obviously the new requirements need to be implemented in a future step.
 
 \subsection{Process integration to UZH}
 Currently the expenses will be printed and delivered to the Finance Administration of the University of Zurich in paper format. In turn they'll be scanned to be digitalized and archived at the Finance Administration of the University of Zurich. If this media disruption could be suspended, the overall process efficiency increases. The system is ready to integrate the last instance in the process - the Finance Administration of the University of Zurich - however, this will be an ongoing process that need to be dealt with. The system provides a guest-view to point out the value of the tool.
-

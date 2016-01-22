@@ -14,7 +14,6 @@ The following sub chapters will explain why interfaces to external service provi
 
 The system fetches user-data from the UZH-IFI LDAP server (see figure \ref{fig:context-diagram}). The user-data is necessary to synchronize the user database of the reimbursement-tool with the LDAP user-data. This will allow all users, registered at the IFI LDAP server to use the system without creating a new user name and password for login. For adjusting the LDAP settings see appendix \ref{subsubsec:ldap}.
 
-
 \begin{figure}[H]
     \centering
     \fbox{\includegraphics[width=0.80\textwidth]{context-diagram}}
@@ -37,8 +36,6 @@ The back-end is considered as the software and database running on a Tomcat \cit
 \subsection{Back-end}
 The back-end is developed in Java. It is structured according to the rules of a multilayered software architecture. We use the domain driven design \cite{ddd} to apply commen patterns for the layers in the backend. The domain model, that consists of the concepts, is connected to the database. Changes on the model will be automatically synchronized with the database. The service package lists all methods that are used on a domain model.\newline
 DTOs (Data Transfer Object) are used to transfers data from back-end to front-end and vice verse. \newline The implemented model- and service-classes are visualized in appendix \ref{sec:app-models} and \ref{sec:app-service}. \par
-
-
 
 \subsection{Front-end}
 The front-end is developed in JavaScript using the AngularJS \cite{angular} framework. AngularJS is based on an MVC (Model View Controller) pattern. It basically consists of controllers, templates used for the view, as well as models representing the data that is shown to the user using the templates. However, AngularJS \cite{angular} extends the basic MVC concept with useful enhancements like directives, filters, injectors etc. A complete list of the available concepts in AngularJS and small examples can be found at the AgngularJS: Developer Guide \cite{angular-devguide}.
@@ -168,15 +165,15 @@ The Pdf gets generated using an individual created XSLT template and a XML docum
 We decided for Apache FOP because it is based on widely used standards like XML and XSL so that ongoing maintenance can be achieved easily and without specific knowledge required.
 
 \subsubsection{Digital signature}
-The ability to sign the printed Pdf document is crucial so that authenticity is provided. Especially if the Pdf document will be used as evidence by the Finance Administration of the University of Zurich. However, in the current implementation of the system, there is only an electronic signature available (refer to section \ref{sec:future-work}). The system is prepared to implement the digital signature method. \par
-
-All involved participants need to sign the document; \textit{Creator}, \textit{Manager} and the \textit{Finance administration} to proof their acceptance of the expense and the captured receipts. \par
-
-We define the two signature types as follow \cite{arx-signature}:
+The ability to sign the printed Pdf document is crucial so that authenticity is provided. Especially if the Pdf document will be used as evidence by the Finance Administration of the University of Zurich. The system provides two types of signatures \cite{arx-signature}:
 \begin{itemize}
     \item A \textbf{Digital signature} ensure the authenticity of the signer. Any changes made to the document after it has been signed will invalidate the signature. To use it the user has to provide his private key to successfully sign the document.
     \item \textbf{Electronic signature} does not ensure the authenticity of the signer. Anyone can theoretically make changes on the document after it has been signed without the signature become invalid. The handwritten signature captured during the registration will be stamped on the Pdf document.
-\end{itemize}
+\end{itemize}\par
+
+The implementation of the digital signature is done using a third party library pdfsign.js \cite{pdfsign} that allows us to do the pdf signing in the browser and not on the server. Due to the requirement, that the private key cannot be uploaded or processed by the server, the signing needs to be done on the client using the web browser.\par
+
+All involved participants need to sign the document; \textit{Creator}, \textit{Manager} and the \textit{Finance administration} to proof their acceptance of the expense and the captured receipts. \par
 
 \subsection{Interface}
 
