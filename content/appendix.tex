@@ -6,7 +6,7 @@
 \section{Back-end / Server}
 \label{sec:backend-server}
 
-In the following chapters the installation of the back-end is described. The back-end uses Mave for its dependency management and build process. A local Tomcat server needs to be installed and the project needs to be configured as a Maven project.
+In the following chapters the installation of the back-end is described. The back-end uses Maven for its dependency management and build process. A local Tomcat server needs to be installed and the project needs to be configured as a Maven project.
 
 \subsection{Maven installation}
 To install Maven and build the system complete the following steps:
@@ -49,7 +49,7 @@ The currently used e-mail settings can be adjusted at the \texttt{application.pr
 The \textit{.xsl} file is used to generate an \textit{.fo} file out of an xml-file that consists of object data. In the folder \textit{src/main/resources} exists a \texttt{xml-mapping.xml} file that maps a data-object to a xml-object. The xml-object is required by the \texttt{xml2fo.xsl} and \texttt{attachmentXml2fo.xsl}. Those files transfer the xml-object into a \textit{.fo} file which is needed by the Apache FOP to generate the Pdf.
 
 
-\section{Frontend / Client}
+\section{Front-end / Client}
 
 \subsection{Basic setup}
 To run the application locally on the client npm needs to be installed. If it is already installed on your system, you can skip it.
@@ -140,7 +140,7 @@ By default, the profile \textit{reimbursement_dev} is active. So an LDAP server 
 \label{sec:clear-postgresdb}
 To truncate the existing PostgresDB it needs to be accessed thru the VM using the specified credentials. On the VM a bash script exists, that allows us to automatically update the database so that it get's cleared. This script is available in the directory \textit{/usr/share/tomcat7/reimbursement-database} named \textit{clear-postgres-database.bash}.
 
-\subsection{Frontend}
+\subsection{Front-end}
 
 \begin{itemize}
 
@@ -152,7 +152,7 @@ To truncate the existing PostgresDB it needs to be accessed thru the VM using th
         }
     \end{lstlisting}
     \item Add the credentials to the file deploy.json. The deploy.json file is stored in the main directory.
-    \item Open a command line tool and run \texttt{grunt deploy}. This will automatically deploy the frontend to the server.
+    \item Open a command line tool and run \texttt{grunt deploy}. This will automatically deploy the front-end to the server.
 
 \end{itemize}
 
