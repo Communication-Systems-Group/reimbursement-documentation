@@ -117,7 +117,7 @@ To deploy the software from the local running copy to the server running a Tomca
     </settings>
     \end{lstlisting}
 
-    Add the respective user name and password values to login properly.
+    Add the respective user name and password values to login properly. Be aware, that the passwords need to be xml-encoded.
 
     \item To configure the deployment right click to the server project in Eclipse -> Run As -> Maven Build... and enter the following values in the corresponding input fields:
     \newline
@@ -129,6 +129,16 @@ To deploy the software from the local running copy to the server running a Tomca
     \item Call the new created maven build and the project will be deployed to the production server.
 
 \end{itemize}
+
+Hint: If you do not enter the profile name here, the test database is started on your server and the H2 database is used.
+
+\subsubsection{Profiles}
+There are currently two build profiles available \textit{reimbursement_dev} and \textit{reimbursement_prod}. Build profiles switch between the H2 database and the productive database. In the development mode (\textit{reimbursement_dev}), additionally an LDAP server is started with a few users to mock the real users.\newline
+By default, the profile \textit{reimbursement_dev} is active. So an LDAP server is started and the H2 database is used. To enable the \textit{reimbursement_prod} profile locally, pass the profile to the local tomcat. This can be achieved by right clicking on the project in the eclipse explorer | Properties | Maven and enter the word "reimbursement_prod" into the input field.
+
+\subsubsection{Clear PostgresDB}
+\label{sec:clear-postgresdb}
+To truncate the existing PostgresDB it needs to be accessed thru the VM using the specified credentials. On the VM a bash script exists, that allows us to automatically update the database so that it get's cleared. This script is available in the directory \textit{/usr/share/tomcat7/reimbursement-database} named \textit{clear-postgres-database.bash}.
 
 \subsection{Frontend}
 
