@@ -15,7 +15,7 @@ To install Maven and build the system complete the following steps:
     \item Maven should be already integrated in Eclipse for Java EE. If the following steps do not work, download maven and the m2e eclipse plugin.
     \item Clone or checkout the public reimbursement-server repository hosted on Github (see appendix \ref{github-source}).
     \item After checking out the server project, the project needs to be configured as a Maven project.
-    \item Run \texttt{mvn:install} to build and download all the dependencies required for the project. 
+    \item Run \texttt{mvn:install} to build and download all the dependencies required for the project.
     \item Download Apache Tomcat 8.0. Add the servers-view in Eclipse and click the link to create a new server. Create a new Tomcat server and add the reimbursement-server package to it.
     \item Set the port of the Tomcat to 80 instead of 8080.
 \end{enumerate}
@@ -36,7 +36,7 @@ During the development and integration a specific file will be loaded that defin
 \item \texttt{fadmin} \& \texttt{fadmin2} \& \texttt{depman} \& \texttt{headinst} has similar rights, just like the \textit{Administration} group defined in the IFI LDAP tree.
 \end{itemize}
 
-For all the demo user-accounts, the password is \textit{password}. So to login to the system while in development select one user account and use the password. 
+For all the demo user-accounts, the password is \textit{password}. So to login to the system while in development select one user account and use the password.
 
 \subsubsection{E-mail server}
 \label{subsubsec:email}
@@ -46,7 +46,7 @@ The currently used e-mail settings can be adjusted at the \texttt{application.pr
 \subsubsection{Pdf generation}
 \label{subsubsec:pdf-xml-mappings}
 
-The \textit{.xsl} file is used to generate an \textit{.fo} file out of an xml-file that consists of object data. In the folder \textit{src/main/resources} exists a \texttt{xml-mapping.xml} file that maps a data-object to a xml-object. The xml-object is required by the \texttt{xml2fo.xsl} and \texttt{attachmentXml2fo.xsl}. Those files transfer the xml-object into a \textit{.fo} file which is needed by the Apache FOP to generate the Pdf.  
+The \textit{.xsl} file is used to generate an \textit{.fo} file out of an xml-file that consists of object data. In the folder \textit{src/main/resources} exists a \texttt{xml-mapping.xml} file that maps a data-object to a xml-object. The xml-object is required by the \texttt{xml2fo.xsl} and \texttt{attachmentXml2fo.xsl}. Those files transfer the xml-object into a \textit{.fo} file which is needed by the Apache FOP to generate the Pdf.
 
 
 \section{Frontend / Client}
@@ -82,7 +82,7 @@ Grunt builds the front-end files. It has multiple modules to build: you can conc
 To deploy the software from the local running copy to the server running a Tomcat the following steps are required:
 
 \begin{itemize}
-    \item Configure the local Java environment to run the project described in section \ref{sec:backend-server} 
+    \item Configure the local Java environment to run the project described in section \ref{sec:backend-server}
     \item Store the credentials of the Tomcat instance and productive database in the maven directory. The maven directory is stored mostly on the local machines user directory in the \texttt{.m2/settings.xml} file. The file needs to have the following structure:
 
     \begin{lstlisting}
@@ -97,7 +97,7 @@ To deploy the software from the local running copy to the server running a Tomca
     			<password></password>
     		</server>
     	</servers>
-    
+
     	<profiles>
     		<profile>
     			<id>reimbursement_int</id>
@@ -116,9 +116,9 @@ To deploy the software from the local running copy to the server running a Tomca
     	</profiles>
     </settings>
     \end{lstlisting}
-    
+
     Add the respective user name and password values to login properly.
-    
+
     \item To configure the deployment right click to the server project in Eclipse -> Run As -> Maven Build... and enter the following values in the corresponding input fields:
     \newline
     Name: \texttt{reimbursement-deploy}
@@ -126,10 +126,10 @@ To deploy the software from the local running copy to the server running a Tomca
     Goals: \texttt{clean tomcat7:redeploy}
     \newline
     Profiles: \texttt{reimbursement\_prod}
-    \item Call the new created maven build and the project will be deployed to the production server.  
-    
+    \item Call the new created maven build and the project will be deployed to the production server.
+
 \end{itemize}
-    
+
 \subsection{Frontend}
 
 \begin{itemize}
@@ -138,11 +138,11 @@ To deploy the software from the local running copy to the server running a Tomca
     \begin{lstlisting}
         {
             "username": "",
-            "password": "" 
-        }   
+            "password": ""
+        }
     \end{lstlisting}
     \item Add the credentials to the file deploy.json. The deploy.json file is stored in the main directory.
-    \item Open a command line tool and run \texttt{grunt deploy}. This will automatically deploy the frontend to the server. 
+    \item Open a command line tool and run \texttt{grunt deploy}. This will automatically deploy the frontend to the server.
 
 \end{itemize}
 
@@ -161,6 +161,31 @@ To deploy the software from the local running copy to the server running a Tomca
 \begin{figure}[H]
     {\includegraphics[width=0.95\textwidth]{umlclass-service}}
 \end{figure}
+
+\section{REST Services}
+\label{sec:rest-services}
+
+\subsection{PRIVATE: expense services}
+\begin{figure}[H]
+    {\includegraphics[width=0.95\textwidth]{rest-services_expense}}
+\end{figure}
+\newpage
+
+\subsection{PRIVATE: finance administrator services}
+\begin{figure}[H]
+    {\includegraphics[width=0.95\textwidth]{rest-services_fa}}
+\end{figure}
+
+\subsection{PRIVATE: user services}
+\begin{figure}[H]
+    {\includegraphics[width=0.95\textwidth]{rest-services_user}}
+\end{figure}
+
+\subsection{PUBLIC: various services}
+\begin{figure}[H]
+    {\includegraphics[width=0.95\textwidth]{rest-services_public}}
+\end{figure}
+\newpage
 
 \section{Process diagram}
 \label{sec:process-diagram-rotated}
@@ -194,4 +219,4 @@ The complete software code is available on a public repository on \url{http://gi
     \item Documentation: \newline \url{https://github.com/masterproject-reimbursement/reimbursement-documentation}
 \end{itemize}
 
-For detailed installation instructions of the development environment and deployment steps, please refer to appendix \ref{chap:installation}. 
+For detailed installation instructions of the development environment and deployment steps, please refer to appendix \ref{chap:installation}.

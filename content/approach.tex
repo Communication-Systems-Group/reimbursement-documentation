@@ -27,7 +27,6 @@ The system fetches user-data from the UZH-IFI LDAP server (see figure \ref{fig:c
 To support the reimbursement-tool with accurate currency exchange-rates its necessary to access an external API providing that data. We decided to use \url{fixer.io} \cite{fixer} because it's free, it's updated daily, has a high responsibility and high availability rate. Currently the reimbursement-tool calls the API every time an exchange-rate is needed. For example if the user creates/modifies the amount of a receipt and uses a foreign currency.
 
 \subsubsection{UZH Mail Server}
-
 To notify participants about outstanding expense and actions that need attention, it is necessary to add an automatic mailing service. Therefor the reimbursement-tool needs to have access to the UZH Mail Server. For more information about adjusting the e-mail settings see appendix \ref{subsubsec:email}.\newpage
 
 
@@ -37,7 +36,9 @@ The back-end is considered as the software and database running on a Tomcat \cit
 
 \subsection{Back-end}
 The back-end is developed in Java. It is structured according to the rules of a multilayered software architecture. We use the domain driven design \cite{ddd} to apply commen patterns for the layers in the backend. The domain model, that consists of the concepts, is connected to the database. Changes on the model will be automatically synchronized with the database. The service package lists all methods that are used on a domain model.\newline
-DTOs (Data Transfer Object) are used to transfers data from back-end to front-end and vice verse. \newline The implemented model- and service-classes are visualized in appendix \ref{sec:app-models} and \ref{sec:app-service}
+DTOs (Data Transfer Object) are used to transfers data from back-end to front-end and vice verse. \newline The implemented model- and service-classes are visualized in appendix \ref{sec:app-models} and \ref{sec:app-service}. \par
+
+
 
 \subsection{Front-end}
 The front-end is developed in JavaScript using the AngularJS \cite{angular} framework. AngularJS is based on an MVC (Model View Controller) pattern. It basically consists of controllers, templates used for the view, as well as models representing the data that is shown to the user using the templates. However, AngularJS \cite{angular} extends the basic MVC concept with useful enhancements like directives, filters, injectors etc. A complete list of the available concepts in AngularJS and small examples can be found at the AgngularJS: Developer Guide \cite{angular-devguide}.
@@ -117,7 +118,7 @@ The system maps the users available in the IFI LDAP server. So every user that e
 The reimbursement-tool provides different user roles. Also the roles on the reimbursement-tool are mapped with the LDAP user roles of the University of Zurich. So a user who is defined as professor for a specific group on the LDAP will be the manager for all users of this group. The reimbursement-tool provides the roles with the following authorizations to alter expenses:
 
 \begin{itemize}
-    \item \textbf{Unregistered user} are users, who are authorized to login the reimbursement-tool but have not yet completed the registration process.
+    \item \textbf{Unregistered user} are users, who are authorized to login the reimbursement-tool but have not yet completed the registration process. They have only access to the public REST services (see \ref{sec:rest-services}).
     \item \textbf{Registered user / User} passed the registration process. He can access the reimbursement-tool and create and manage his created expenses. He has one of the following roles:
 
     \begin{itemize}
@@ -129,7 +130,7 @@ The reimbursement-tool provides different user roles. Also the roles on the reim
 
         \item \textbf{Finance administration} is authorized to reject, accept and edit expenses once they have been accepted by a \textit{Manager} or \textit{Department manager}. Furthermore they can manage the available cost categories and search for expenses.
 
-        \item \textbf{Head of institute} has the same authorizations as the \textit{Manager}. In contrast to the \textbf{Department manager} there exists only one \textit{Head of institute}.
+        \item \textbf{Head of institute} has the same authorizations as the \textit{Manager}. In contrast to the \textbf{Department manager} there exists only one user that can be \textit{Head of institute}. The \textit{Head of institute} will have to approve the expense if, for any reason the \textit{Department manager} is not available.
     \end{itemize}
 \end{itemize}
 
@@ -179,7 +180,8 @@ We define the two signature types as follow \cite{arx-signature}:
 
 \subsubsection{RESTful API}
 \label{sec:restfulapi}
-The tool uses a RESTful API that provides methods to access the back-end resources. It is implemented using the Spring MVC.
+The tool uses a RESTful API that provides services to access the back-end resources. It is implemented using the Spring MVC. /newline
+The available methods provided by the backend are listed in \ref{sec:rest-services}. There exist private and public services. Private services can only be access by a \textbf{Registered user / User} (private services are marked with the term PRIVATE).
 
 \subsubsection{Swagger UI}
 The Swagger UI visualizes all methods provided by the RESTful interface using a simple GUI. Furthermore developers can interact directly with the Swagger UI to test the \texttt{HTTP} methods. Figure \ref{fig:swagger01} shows a screen-shot of our Swagger UI. It visualizes all the available methods for the \texttt{public} resource as well as the mandatory and optional parameters for \texttt{HTTP} calls. This was important for the process of development. \cite{swagger} \par
