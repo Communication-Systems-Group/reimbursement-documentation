@@ -73,7 +73,7 @@ During the process an expense passes through various states. An expense is alway
 \begin{itemize}
     \item \textbf{DRAFT} state occurs if the expense is created and yet has not been assigned to a \textit{Manager}.
 
-    \item \textbf{TO\_BE\_ASSIGNED} state occurs if the expense is submitted, but has not been assigned to a specific manager or the \textit{Finance administration} user. If the expense has been assigned, the expense will either have the state \textbf{ASSIGNED\_TO\_MANAGER} or \textbf{ASSIGNED\_TO\_FINANCE\_ADMIN}.
+    \item \textbf{TO\_BE\_ASSIGNED} state occurs if the expense is submitted, but has not been assigned to a specific manager or the \textit{Finance administration} user. If the expense has been assigned, the expense will either have the state \newline \textbf{ASSIGNED\_TO\_MANAGER} or \newline \textbf{ASSIGNED\_TO\_FINANCE\_ADMIN}.
 
     \item \textbf{ASSIGNED\_TO\_MANAGER} state occurs if the expense is assigned to a specific \textit{Manager}.
 
@@ -84,8 +84,8 @@ During the process an expense passes through various states. An expense is alway
     \item \textbf{SIGNED} state occurs if the expense has been signed by all participants; \textit{Creator}, \textit{Manager} or \textit{Department manager} and \textit{Finance administration}. There exist sub states that occur if the expense is in the process of being signed:
         \begin{itemize}
             \item \textbf{TO\_BE\_SIGNED\_BY\_USER} occurs if the expense needs to be signed by the \textit{Creator}.
-            \item \textbf{TO\_BE\_SIGNED\_BY\_MANAGER} occurs if the expense needs to be signed by the \textit{Manager}.
-            \item \textbf{TO\_BE\_SIGNED\_BY\_FINANCE\_ADMIN} occurs if the expense needs to be signed by an user with role \textit{Finance administration}.
+            \item \textbf{TO\_BE\_SIGNED\_BY\_MANAGER} occurs if the expense needs to be \newline signed by the \textit{Manager}.
+            \item \textbf{TO\_BE\_SIGNED\_BY\_FINANCE\_ADMIN} occurs if the expense \newline needs to be signed by an user with role \textit{Finance administration}.
         \end{itemize}
 
     \item \textbf{PRINTED} state occurs if the expense and all its receipts are successfully converted into a digital document.

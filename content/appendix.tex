@@ -1,5 +1,3 @@
-\appendix
-
 \chapter{Installation}
 \label{chap:installation}
 
@@ -88,8 +86,9 @@ To deploy the software from the local running copy to the server running a Tomca
     \begin{lstlisting}
     <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-        http://maven.apache.org/xsd/settings-1.0.0.xsd">
+        xsi:schemaLocation="
+            http://maven.apache.org/SETTINGS/1.0.0
+            http://maven.apache.org/xsd/settings-1.0.0.xsd">
     	<servers>
     		<server>
     			<id>reimbursement-server</id>
@@ -133,8 +132,8 @@ To deploy the software from the local running copy to the server running a Tomca
 Hint: If you do not enter the profile name here, the test database is started on your server and the H2 database is used.
 
 \subsubsection{Profiles}
-There are currently two build profiles available \textit{reimbursement_dev} and \textit{reimbursement_prod}. Build profiles switch between the H2 database and the productive database. In the development mode (\textit{reimbursement_dev}), additionally an LDAP server is started with a few users to mock the real users.\newline
-By default, the profile \textit{reimbursement_dev} is active. So an LDAP server is started and the H2 database is used. To enable the \textit{reimbursement_prod} profile locally, pass the profile to the local tomcat. This can be achieved by right clicking on the project in the eclipse explorer | Properties | Maven and enter the word "reimbursement_prod" into the input field.
+There are currently two build profiles available \textit{reimbursement\_dev} and \newline \textit{reimbursement\_prod}. Build profiles switch between the H2 database and the productive database. In the development mode, additionally an LDAP server is started with a few users to mock the real users.\newline
+By default, the profile \textit{reimbursement\_dev} is active. So an LDAP server is started and the H2 database is used. To enable the \textit{reimbursement\_prod} profile locally, pass the profile to the local tomcat. This can be achieved by right clicking on the project in the eclipse explorer | Properties | Maven and enter the word \textit{reimbursement\_dev} into the input field.
 
 \subsubsection{Clear PostgresDB}
 \label{sec:clear-postgresdb}
@@ -164,13 +163,15 @@ To truncate the existing PostgresDB it needs to be accessed thru the VM using th
 \begin{figure}[H]
     {\includegraphics[width=1.0\textwidth]{umlclass-model}}
 \end{figure}
+\newpage
 
 \section{Services}
 \label{sec:app-service}
 
 \begin{figure}[H]
-    {\includegraphics[width=0.95\textwidth]{umlclass-service}}
+    {\includegraphics[width=0.8\textwidth]{umlclass-service}}
 \end{figure}
+\newpage
 
 \section{REST Services}
 \label{sec:rest-services}
@@ -201,8 +202,9 @@ To truncate the existing PostgresDB it needs to be accessed thru the VM using th
 \label{sec:process-diagram-rotated}
 
 \begin{figure}[H]
-    {\includegraphics[width=0.8\textwidth]{process-diagram-rotated}}
+    {\includegraphics[width=0.75\textwidth]{process-diagram-rotated}}
 \end{figure}
+\newpage
 
 \section{State diagram}
 \label{sec:state-diagram}
@@ -210,13 +212,15 @@ To truncate the existing PostgresDB it needs to be accessed thru the VM using th
 \begin{figure}[H]
     {\includegraphics[width=0.8\textwidth]{state-diagram}}
 \end{figure}
+\newpage
 
 \section{PDF}
 \label{sec:app-pdf}
 
 \begin{figure}[H]
-    {\includegraphics[width=0.95\textwidth]{pdf}}
+    {\includegraphics[width=0.8\textwidth]{pdf}}
 \end{figure}
+\newpage
 
 \chapter{Software source-code}
 \label{github-source}
@@ -226,7 +230,7 @@ The complete software code is available on a public repository on \url{http://gi
 \begin{itemize}
     \item Back-end: \newline \url{https://github.com/masterproject-reimbursement/reimbursement-server}
     \item Front-end: \newline \url{https://github.com/masterproject-reimbursement/reimbursement-client}
-    \item Documentation: \newline \url{https://github.com/masterproject-reimbursement/reimbursement-documentation}
+    \item Documentation: \newline \url{https://github.com/masterproject-reimbursement/} \newline \url{reimbursement-documentation}
 \end{itemize}
 
 For detailed installation instructions of the development environment and deployment steps, please refer to appendix \ref{chap:installation}.
