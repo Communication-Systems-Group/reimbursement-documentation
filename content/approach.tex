@@ -107,6 +107,8 @@ To inform the users of the reimbursement-tool about expense state changes, e-mai
     \item If an expense is rejected by a \textit{Manager} or the \textit{Finance administration} the \textit{Creator} of the expense will receive an e-mail notification.
 \end{itemize}
 
+E-mail notifications will be stored in a queue for each user and mailed to them three times a day in bulk mode. So we guarantee, that a user will not get spammed and the notifications messages are consolidated.
+
 Besides state changes, e-mails will also be sent to an administrator if a general run-time exception occurs. To ensure the administrator of the reimbursement-tool is up-to date about major incidents.
 
 
