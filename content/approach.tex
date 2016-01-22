@@ -36,7 +36,7 @@ To notify participants about outstanding expense and actions that need attention
 The back-end is considered as the software and database running on a Tomcat \cite{tomcat} server and uses PostgreSQL \cite{postgresql} to run the database on. The system is hosted by the IFI. The front-end/client communicates with the back-end using a RESTful service interface described in section \ref{sec:restfulapi}.
 
 \subsection{Back-end}
-The back-end is developed in Java. It is structured according to the rules of Domain Driven Design (DDD) \cite{ddd}. The domain model, that consists of the concepts, is connected to the database. Changes on the model will be automatically synchronized with the database. The service package lists all methods that are used on a domain model.\newline
+The back-end is developed in Java. It is structured according to the rules of a multilayered software architecture. We use the domain driven design \cite{ddd} to apply commen patterns for the layers in the backend. The domain model, that consists of the concepts, is connected to the database. Changes on the model will be automatically synchronized with the database. The service package lists all methods that are used on a domain model.\newline
 DTOs (Data Transfer Object) are used to transfers data from back-end to front-end and vice verse. \newline The implemented model- and service-classes are visualized in appendix \ref{sec:app-models} and \ref{sec:app-service}
 
 \subsection{Front-end}
@@ -167,7 +167,7 @@ We decided for Apache FOP because it is based on widely used standards like XML 
 \subsubsection{Digital signature}
 The ability to sign the printed Pdf document is crucial so that authenticity is provided. Especially if the Pdf document will be used as evidence by the Finance Administration of the University of Zurich. However, in the current implementation of the system, there is only an electronic signature available (refer to section \ref{sec:future-work}). The system is prepared to implement the digital signature method. \par
 
-All involved participants need to sign the document; \textit{Creator}, \textit{Manager} and the \textit{Finance administration} to proof their acceptance of the expense and the captured receipts. \par 
+All involved participants need to sign the document; \textit{Creator}, \textit{Manager} and the \textit{Finance administration} to proof their acceptance of the expense and the captured receipts. \par
 
 We define the two signature types as follow \cite{arx-signature}:
 \begin{itemize}
