@@ -10,10 +10,10 @@ The context diagram (see figure \ref{fig:context-diagram}) describes the relatio
  \textit{Expense Creators}, in short creators, such as assistants, professors and the administrative employees can create expenses, view and print them. However, they are only allowed to modify their own expense while it is in the draft state i.e has not been submitted to the creator's manager yet.  \textit{Managers}, such as professors, the department manager and the head of IFI and the \textit{Finance administration} are able to \textit{reject expenses} and send them back to the \textit{Creator}. Besides rejecting expenses, they are also able to modify them. Moreover, \textit{Managers} have also to provide for each expense a project describtion. \textit{Guests} are allowed to view specific expenses and related expense-items too. However, they need the 32-character long internal expense \textit{Uid} to gain access to the expense's details. The \textit{Uid} is added on the printed expense document (see appendix \ref{sec:app-pdf}).
 
 \subsection{Services}
-The following sub chapters will explain what interfaces to external service providers are necessary.
+The following sub chapters explain what interfaces to external service providers exist.
 
 \subsubsection{IFI LDAP Server}
-The reimbursement-tool fetches user-data from the IFI LDAP server (see figure \ref{fig:context-diagram}) and stores it in the reimbursement-database. By being able to reuse their existing LDAP credentials, users get a comfortable way to login to the system and ensures at the same time that only authenticated users gain access to the system. Furthermore, the user's current roles and the user's manager are assigned automatically and in consequence correctly. For details about how to adjust the LDAP settings please refer to appendix \ref{subsubsec:ldap}.
+The reimbursement-tool fetches user-data from the IFI LDAP server (see figure \ref{fig:context-diagram}) and stores it in the reimbursement-database. By being able to reuse their existing LDAP credentials, users get a comfortable way to login to the system and ensures at the same time that only authenticated users gain access to the system. Furthermore, the user's current roles and the user's manager are assigned automatically. If there is no manager specified in the LDAP, a warning is shown to the user. For details about how to adjust the LDAP settings please refer to appendix \ref{subsubsec:ldap}.
 
 \begin{figure}[H]
     \centering

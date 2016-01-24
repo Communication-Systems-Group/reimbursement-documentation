@@ -1,3 +1,5 @@
+\part*{Appendix}
+
 \chapter{Installation}
 \label{chap:installation}
 
@@ -6,7 +8,7 @@
 
 In the following chapters the installation of the back-end is described. The back-end uses Maven for its dependency management and build process. A local Tomcat server needs to be installed and the project needs to be configured as a Maven project.
 
-\subsection{Maven installation}
+\subsubsection{Maven installation}
 To install Maven and build the system complete the following steps:
 
 \begin{enumerate}
@@ -18,33 +20,36 @@ To install Maven and build the system complete the following steps:
     \item Set the port of the Tomcat to 80 instead of 8080.
 \end{enumerate}
 
-\subsection{General settings}
-
+\subsubsection{General settings}
 In the general settings section overall configuration parameters are defined and explained.
 
-\subsubsection{LDAP}
+\paragraph{LDAP}
 \label{subsubsec:ldap}
 
-Currently the synchronisation interval is defined to take part every 300 Seconds. By changing the value of \textit{reimbursement.ldap.refreshRate} on the file \texttt{application.properties} stored at the back-end in the directory \textit{src/main/resources}. \par
+Currently the synchronisation interval is set to 300 seconds. This value can be changed by adjusting the variable \textit{reimbursement.ldap.refreshRate} in the \texttt{application.properties} file that is stored in the back-end at \textit{src/main/resources} \par
 During the development and integration a specific file will be loaded that defines the available demo user-accounts for the reimbursement-tool. Those users are defined in the file \texttt{development-server.ldif}. The following users exist:
 \begin{itemize}
-\item \texttt{junior} has similar rights, just like the \textit{JuniorAssistants} group defined in the IFI LDAP tree.
-\item \texttt{senior} has similar rights, just like the \textit{SeniorAssistants} group defined in the IFI LDAP tree.
-\item \texttt{prof} has similar rights, just like the \textit{Professors} group defined in the IFI LDAP tree.
-\item \texttt{fadmin} \& \texttt{fadmin2} \& \texttt{depman} \& \texttt{headinst} has similar rights, just like the \textit{Administration} group defined in the IFI LDAP tree.
+\item \texttt{junior} is a representative for the \textit{JuniorAssistants} group defined in the IFI LDAP tree.
+\item \texttt{senior} is a representative for the \textit{SeniorAssistants} group defined in the IFI LDAP tree.
+\item \texttt{prof} is a representative for the \textit{Professors} group defined in the IFI LDAP tree.
+\item \texttt{fadmin} \& \texttt{fadmin2} are representatives for the \textit{Administration} group defined in the IFI LDAP tree.
+\item \texttt{Depman} is a representative for the \textit{Departement Manager} defined in the IFI LDAP tree.
+\item \texttt{Headinst} is a representative for the \textit{Head of Institute} defined in the IFI LDAP tree.
+
 \end{itemize}
 
-For all the demo user-accounts, the password is \textit{password}. So to login to the system while in development select one user account and use the password.
+For all the demo user-accounts, the password is \textit{password}. To be able to login with the demo users, the test-ldap server has to run (is automatically launched if the build profile is "DEV" oder "INT") and also the demo-user SQL has to update the SQL Database (also done automatically in the "DEV" oder "INT" profiles).
 
-\subsubsection{E-mail server}
+\paragraph{E-mail server}
 \label{subsubsec:email}
 
-The currently used e-mail settings can be adjusted at the \texttt{application.properties} file in the back-end. E-mail templates are stored in the directory \textit{src/main/resources/email}.
+The currently used e-mail settings can be adjusted in the \\ \texttt{application.properties} file in the back-end. Email templates are stored in the directory \textit{src/main/resources/email}. To adjust an email template, please change the non-inlined version (\textit{src/main/resources/email/notInlinedTemplates}) and inline it by using an inlining service like \textit{Ink} (\url{http://foundation.zurb.com/emails/inliner.html}). To change the texts used in the email templates, please refer to the "EmergencyEmailSendJob.java" and "NotificationSendJob.java" classes stored in the \textit{model} folder in the back-end.
 
-\subsubsection{Pdf generation}
+\paragraph{Pdf generation}
 \label{subsubsec:pdf-xml-mappings}
 
 The \textit{.xsl} file is used to generate an \textit{.fo} file out of an xml-file that consists of object data. In the folder \textit{src/main/resources} exists a \texttt{xml-mapping.xml} file that maps a data-object to a xml-object. The xml-object is required by the \texttt{xml2fo.xsl} and \texttt{attachmentXml2fo.xsl}. Those files transfer the xml-object into a \textit{.fo} file which is needed by the Apache FOP to generate the Pdf.
+
 
 
 \section{Front-end / Client}
@@ -60,7 +65,7 @@ First we need to install npm and Bower:
   \item If Bower is not already installed on your system (check in with \texttt{which bower}), install it by running \texttt{npm install -g bower}. After you have verified that Bower is installed run \texttt{bower install}. This will download all required dependencies that are defied in the \textit{bower.json}.
 \end{enumerate}
 
-\subsubsection{Grunt}
+\paragraph{Grunt}
 Grunt builds the front-end files. It has multiple modules to build: you can concat, copy, prefix, sass-compile etc. The configuration of Grunt is stored in \textit{Gruntfile.js} and the modules of grunt are loaded using npm.
 \begin{enumerate}
   \item After all the steps in npm section are completed, grunt needs to be installed. This can be done by \texttt{npm install -g grunt-cli}. Now we can start using the grunt CLI. There are various options available:
@@ -131,11 +136,11 @@ To deploy the software from the local running copy to the server running a Tomca
 
 Hint: If you do not enter the profile name here, the test database is started on your server and the H2 database is used.
 
-\subsubsection{Profiles}
+\paragraph{Profiles}
 There are currently two build profiles available \textit{reimbursement\_dev} and \newline \textit{reimbursement\_prod}. Build profiles switch between the H2 database and the productive database. In the development mode, additionally an LDAP server is started with a few users to mock the real users.\newline
 By default, the profile \textit{reimbursement\_dev} is active. So an LDAP server is started and the H2 database is used. To enable the \textit{reimbursement\_prod} profile locally, pass the profile to the local tomcat. This can be achieved by right clicking on the project in the eclipse explorer | Properties | Maven and enter the word \textit{reimbursement\_dev} into the input field.
 
-\subsubsection{Clear PostgresDB}
+\paragraph{Clear PostgresDB}
 \label{sec:clear-postgresdb}
 To truncate the existing PostgresDB it needs to be accessed thru the VM using the specified credentials. On the VM a bash script exists, that allows us to automatically update the database so that it get's cleared. This script is available in the directory \textit{/usr/share/tomcat7/reimbursement-database} named \textit{clear-postgres-database.bash}.
 
@@ -155,7 +160,7 @@ To truncate the existing PostgresDB it needs to be accessed thru the VM using th
 
 \end{itemize}
 
-\chapter{}
+\chapter{Models and Figures}
 
 \section{Models}
 \label{sec:app-models}
@@ -225,12 +230,13 @@ To truncate the existing PostgresDB it needs to be accessed thru the VM using th
 \chapter{Software source-code}
 \label{github-source}
 
-The complete software code is available on a public repository on \url{http://github.com}. There exists two repositories; one for the front-end and one for the back-end:
+The complete source code is available on a public repository on \url{http://github.com}. There exist four repositories: one for the front-end, one for the back-end, one for the technical documentation and one for the user manual.
 
 \begin{itemize}
     \item Back-end: \newline \url{https://github.com/masterproject-reimbursement/reimbursement-server}
     \item Front-end: \newline \url{https://github.com/masterproject-reimbursement/reimbursement-client}
-    \item Documentation: \newline \url{https://github.com/masterproject-reimbursement/} \newline \url{reimbursement-documentation}
+    \item Documentation: \newline \url{https://github.com/masterproject-reimbursement/reimbursement-documentation}
+    \item User Manual: \newline \url{https://github.com/masterproject-reimbursement/reimbursement-manual}
 \end{itemize}
 
 For detailed installation instructions of the development environment and deployment steps, please refer to appendix \ref{chap:installation}.
