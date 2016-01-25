@@ -1,29 +1,29 @@
 \part*{Appendix}
 
-\chapter{Installation}
+\chapter{Installation, Setup and Settings}
 \label{chap:installation}
 
 \section{Back-end / Server}
 \label{sec:backend-server}
 
-In the following chapters the installation of the back-end is described. The back-end uses Maven for its dependency management and build process. A local Tomcat server needs to be installed and the project needs to be configured as a Maven project.
+In the following chapters the installation and setup of the back-end is described: The back-end uses Maven for its dependency management and build process. A local Tomcat server needs to be installed, the source code has to be downloaded from Github and the project needs to be configured as a Maven project.
 
-\subsubsection{Maven installation}
+\subsection{Installation}
 To install Maven and build the system complete the following steps:
 
 \begin{enumerate}
-    \item Maven should be already integrated in Eclipse for Java EE. If the following steps do not work, download maven and the m2e eclipse plugin.
+    \item Maven should be already integrated in Eclipse for JavaEE developers. If the following steps do not work, download and install maven and the m2e Eclipse plugin. During development, Eclipse Mars 4.5.1 was used.
     \item Clone or checkout the public reimbursement-server repository hosted on Github (see appendix \ref{github-source}).
-    \item After checking out the server project, the project needs to be configured as a Maven project.
+    \item Import the project into Eclipse and then convert it to a Maven project.
     \item Run \texttt{mvn:install} to build and download all the dependencies required for the project.
     \item Download Apache Tomcat 8.0. Add the servers-view in Eclipse and click the link to create a new server. Create a new Tomcat server and add the reimbursement-server package to it.
-    \item Set the port of the Tomcat to 80 instead of 8080.
+    \item In the servers-view, double click the server-name and set the port of the Tomcat to 80 instead of 8080 and the startup timeout to approx. 90 seconds.
 \end{enumerate}
 
-\subsubsection{General settings}
-In the general settings section overall configuration parameters are defined and explained.
+\subsection{Server Settings}
+In the settings section overall configuration parameters are defined and explained.
 
-\paragraph{LDAP}
+\subsubsection{LDAP}
 \label{subsubsec:ldap}
 
 Currently the synchronisation interval is set to 300 seconds. This value can be changed by adjusting the variable \textit{reimbursement.ldap.refreshRate} in the \texttt{application.properties} file that is stored in the back-end at \textit{src/main/resources} \par
@@ -38,14 +38,14 @@ During the development and integration a specific file will be loaded that defin
 
 \end{itemize}
 
-For all the demo user-accounts, the password is \textit{password}. To be able to login with the demo users, the test-ldap server has to run (is automatically launched if the build profile is "DEV" oder "INT") and also the demo-user SQL has to update the SQL Database (also done automatically in the "DEV" oder "INT" profiles).
+For all the demo user-accounts, the password is \textit{password}. To be able to login with the demo users, the test-ldap server has to run (is automatically started if the build profile is "DEV" or "INT") and also the demo-user SQL has to update the SQL Database (also done automatically in the "DEV" or "INT" profiles).
 
-\paragraph{E-mail server}
+\subsubsection{E-mail server}
 \label{subsubsec:email}
 
-The currently used e-mail settings can be adjusted in the \\ \texttt{application.properties} file in the back-end. Email templates are stored in the directory \textit{src/main/resources/email}. To adjust an email template, please change the non-inlined version (\textit{src/main/resources/email/notInlinedTemplates}) and inline it by using an inlining service like \textit{Ink} (\url{http://foundation.zurb.com/emails/inliner.html}). To change the texts used in the email templates, please refer to the "EmergencyEmailSendJob.java" and "NotificationSendJob.java" classes stored in the \textit{model} folder in the back-end.
+The e-mail settings can be adjusted in the \\ \texttt{application.properties} file in the back-end. To change the layout of an email, the corresponding email template has to be adapted. The email templates are stored in the directory \textit{src/main/resources/email}. To adjust an email template, we recommend to change the non-inlined version (\textit{src/main/resources/email/notInlinedTemplates}) and then inline it by using an inlining service like \textit{Ink.} (\url{http://foundation.zurb.com/emails/inliner.html}). To change the wording of the emails, the source texts in the "EmergencyEmailSendJob.java" and "NotificationSendJob.java" classes have to be adapted. These files are stored on the back-end in \textit{/src/main/java/ch/uzh/csg/reimbursement/model} folder.
 
-\paragraph{Pdf generation}
+\subsubsection{Pdf Generation}
 \label{subsubsec:pdf-xml-mappings}
 
 The \textit{.xsl} file is used to generate an \textit{.fo} file out of an xml-file that consists of object data. In the folder \textit{src/main/resources} exists a \texttt{xml-mapping.xml} file that maps a data-object to a xml-object. The xml-object is required by the \texttt{xml2fo.xsl} and \texttt{attachmentXml2fo.xsl}. Those files transfer the xml-object into a \textit{.fo} file which is needed by the Apache FOP to generate the Pdf.
@@ -55,26 +55,28 @@ The \textit{.xsl} file is used to generate an \textit{.fo} file out of an xml-fi
 \section{Front-end / Client}
 
 \subsection{Basic setup}
-To run the application locally on the client npm needs to be installed. If it is already installed on your system, you can skip it.
+To run the front-end application on your local client, node.js (incl. npm), Bower and Grunt need to be installed.
 
-First we need to install npm and Bower:
+\paragraph{Node.js and Bower}
+First we need to install node.js (incl. npm) and Bower:
 \begin{enumerate}
-  \item Make sure, you have installed the latest version of Node.js.
+  \item Make sure, you have installed the latest version of Node.js. In development we used Node 5.4.0 and npm 3.3.12.
   \item Clone or checkout the public reimbursement-client repository hosted on Github (see appendix \ref{github-source}).
   \item Open a command-line tool and navigate to the root of the reimbursement-client directory and run \texttt{npm install}. This will download all required dependencies that are defied in the \textit{package.json}.
-  \item If Bower is not already installed on your system (check in with \texttt{which bower}), install it by running \texttt{npm install -g bower}. After you have verified that Bower is installed run \texttt{bower install}. This will download all required dependencies that are defied in the \textit{bower.json}.
+  \item While extensions to Node.js can be downloaded and installed by npm, the front-end dependencies like AngularJS, Flow.js and JQuery can conveniently be managed with Bower. If it is not already installed on your system (check in with \texttt{which bower}), install it by running \texttt{npm install -g bower}. After you have verified that Bower is installed run \texttt{bower install}. This will download all required dependencies that are defied in the \textit{bower.json}.
 \end{enumerate}
 
 \paragraph{Grunt}
-Grunt builds the front-end files. It has multiple modules to build: you can concat, copy, prefix, sass-compile etc. The configuration of Grunt is stored in \textit{Gruntfile.js} and the modules of grunt are loaded using npm.
+Grunt builds the front-end files. It has multiple modules to build: you can concat, copy, prefix, sass-compile etc. The configuration of Grunt is stored in \textit{Gruntfile.js} and the modules grunt requires are loaded using npm.
 \begin{enumerate}
-  \item After all the steps in npm section are completed, grunt needs to be installed. This can be done by \texttt{npm install -g grunt-cli}. Now we can start using the grunt CLI. There are various options available:
+  \item After all the steps in the npm section are completed, grunt needs to be installed. This can be done by \texttt{npm install -g grunt-cli}. Now we can start using the grunt CLI. There are various options available:
   \begin{itemize}
-      \item \texttt{grunt}: This command starts the default grunt operation. It is used to build all the files. Use it only for development purpose, because the minified versions are not created.
-      \item \texttt{grunt prod}: This command minifies and uglifies all the files. Use it to test if minification and uglification covers all the production requirements.
-      \item \texttt{grunt serve}: This command starts a local http-server and updates automatically. If a source file is changed, the build will be executed and the browser will be reloaded to visualize the changes.
-      \item \texttt{grunt prod-serve}: This command runs starts a local server with the production files as a base.
-      \item \texttt{grunt deploy}: This command builds the project with the production profile and uploads the build files to the Tomcat instance (makes a redeploy). The deployment requires a deploy.json with the server configuration. See section Deployment for details.
+	\item \texttt{grunt}: This command starts the default grunt operation. It is used to build all the files. Use it only for development purpose, because the minified versions are not created.
+	\item \texttt{grunt prod}: This command minifies and uglifies all the files. Use it to test if minification and uglification covers all the production requirements.
+	\item \texttt{grunt serve}: This command starts a local http-server and updates automatically. If a source file is changed, the build will be executed and the browser will be reloaded to visualize the changes.
+	\item \texttt{grunt prod-serve}: This command runs starts a local server with the production files as a base.
+	\item \texttt{grunt deploy-int}: This command builds the project with the production profile and uploads the created files to the INTEGRATION Tomcat instance running on 192.41.136.227 (makes a redeploy). The deployment requires a deploy.json with the server configuration. Please refer to the Deployment section for details.
+	\item \texttt{grunt deploy-prod}: This command builds the project with the production profile and uploads the created files to the PRODUCTION Tomcat instance running on 192.41.136.228 (makes a redeploy). The deployment requires a deploy.json with the server configuration. Please refer to the Deployment section for details.
     \end{itemize}
 \end{enumerate}
 
