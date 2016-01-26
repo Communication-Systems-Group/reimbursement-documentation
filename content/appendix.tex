@@ -43,7 +43,19 @@ For all the demo user-accounts, the password is \textit{password}. To be able to
 \subsubsection{E-mail server}
 \label{subsubsec:email}
 
-The e-mail settings can be adjusted in the \\ \texttt{application.properties} file in the back-end. To change the layout of an email, the corresponding email template has to be adapted. The email templates are stored in the directory \textit{src/main/resources/email}. To adjust an email template, we recommend to change the non-inlined version (\textit{src/main/resources/email/notInlinedTemplates}) and then inline it by using an inlining service like \textit{Ink.} (\url{http://foundation.zurb.com/emails/inliner.html}). To change the wording of the emails, the source texts in the "EmergencyEmailSendJob.java" and "NotificationSendJob.java" classes have to be adapted. These files are stored on the back-end in \textit{/src/main/java/ch/uzh/csg/reimbursement/model} folder.
+The e-mail settings can be adjusted in the \\ \texttt{application.properties} file in the back-end. To change the layout of an email, the corresponding email template has to be adapted. The email templates are stored in the directory \textit{src/main/resources/email}. To adjust an email template, we recommend to change the non-inlined version (\textit{src/main/resources/email/notInlinedTemplates}) and then inline it by using an inlining service like \textit{Ink.} (\url{http://foundation.zurb.com/emails/inliner.html}). To change the wording of the emails, the source texts in the "EmergencyEmailSendJob.java" and "NotificationSendJob.java" classes have to be adapted. These files are stored on the back-end in \textit{/src/main/java/ch/uzh/csg/reimbursement/model} folder. \newline \\
+Some of the variables in the \texttt{application.properties} file depend on the maven profile and are therefore specified in the \texttt{pom.xml} file that is stored in the back-end's root folder.
+
+\begin{lstlisting}
+# If true this option stores an HTML
+# file on the server instead of sending it to the email-receiver.
+# the exact location can be seen in the email-log.
+mail.redirectMailsToFile = ${mail.redirectMailsToFile}
+
+# This crontrigger defines when the email are sent out
+# http://www.quartz-scheduler.org)
+mail.sendEmailsIntervalCron = ${mail.sendEmailsIntervalCron}
+\end{lstlisting}
 
 \subsubsection{Pdf Generation}
 \label{subsubsec:pdf-xml-mappings}
@@ -55,10 +67,10 @@ The \textit{.xsl} file is used to generate an \textit{.fo} file out of an xml-fi
 \section{Front-end / Client}
 
 \subsection{Basic setup}
-To run the front-end application on your local client, node.js (incl. npm), Bower and Grunt need to be installed.
+To run the front-end application on your local client, Node.js (incl. npm), Bower and Grunt need to be installed.
 
 \paragraph{Node.js and Bower}
-First we need to install node.js (incl. npm) and Bower:
+First we need to install Node.js (incl. npm) and Bower:
 \begin{enumerate}
   \item Make sure, you have installed the latest version of Node.js. In development we used Node 5.4.0 and npm 3.3.12.
   \item Clone or checkout the public reimbursement-client repository hosted on Github (see appendix \ref{github-source}).
@@ -84,11 +96,11 @@ Grunt builds the front-end files. It has multiple modules to build: you can conc
 
 \subsection{Backend}
 
-To deploy the software from the local running copy to the server running a Tomcat the following steps are required:
+To deploy the software to the intergation or the production environment, the following steps are required:
 
 \begin{itemize}
-    \item Configure the local Java environment to run the project described in section \ref{sec:backend-server}
-    \item Store the credentials of the Tomcat instance and productive database in the maven directory. The maven directory is stored mostly on the local machines user directory in the \texttt{.m2/settings.xml} file. The file needs to have the following structure:
+    \item Install maven. During development we used the JavaEE Eclipse as described in  \ref{sec:backend-server}.
+    \item Store the credentials of the Tomcat instance and productive database in the maven directory. The hidden maven directory (\texttt{.m2}) is mostly stored inside the user's root directory. If there is no \texttt{.m2/settings.xml} file, create a new one. The file needs to have the following content:
 
     \begin{lstlisting}
     <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
@@ -127,39 +139,39 @@ To deploy the software from the local running copy to the server running a Tomca
 
     \item To configure the deployment right click to the server project in Eclipse -> Run As -> Maven Build... and enter the following values in the corresponding input fields:
     \newline
-    Name: \texttt{reimbursement-deploy}
+    Name: \texttt{reimbursement-prod} or  \texttt{reimbursement-int}
     \newline
     Goals: \texttt{clean tomcat7:redeploy}
     \newline
-    Profiles: \texttt{reimbursement\_prod}
-    \item Call the new created maven build and the project will be deployed to the production server.
+    Profiles: \texttt{reimbursement\_prod} or \texttt{reimbursement\_int}
+    \item run the new created maven build and the project will be deployed to the production/integration server.
 
 \end{itemize}
 
 Hint: If you do not enter the profile name here, the test database is started on your server and the H2 database is used.
 
 \paragraph{Profiles}
-There are currently two build profiles available \textit{reimbursement\_dev} and \newline \textit{reimbursement\_prod}. Build profiles switch between the H2 database and the productive database. In the development mode, additionally an LDAP server is started with a few users to mock the real users.\newline
+There are currently three build profiles available \textit{reimbursement\_dev},  \textit{reimbursement\_int} and \textit{reimbursement\_prod}. Build profiles switch between the H2 database and the productive Postgres database. In the development and integration mode, additionally an LDAP server providing a few demo users to mock the real users is started. Additionally there are also inserted the same users into the database. \newline
 By default, the profile \textit{reimbursement\_dev} is active. So an LDAP server is started and the H2 database is used. To enable the \textit{reimbursement\_prod} profile locally, pass the profile to the local tomcat. This can be achieved by right clicking on the project in the eclipse explorer | Properties | Maven and enter the word \textit{reimbursement\_dev} into the input field.
 
 \paragraph{Clear PostgresDB}
 \label{sec:clear-postgresdb}
-To truncate the existing PostgresDB it needs to be accessed thru the VM using the specified credentials. On the VM a bash script exists, that allows us to automatically update the database so that it get's cleared. This script is available in the directory \textit{/usr/share/tomcat7/reimbursement-database} named \textit{clear-postgres-database.bash}.
+To monitor the database version, Flyway is used. Flyway checks the database version and notifies about incompatible versions. This requires either to update the database version or to empty the existing database. To empty the existing PostgresDB without loosing database rights etc., a bashscript is available. To run the script, the VM needs to be accessed thru SSH and the script be run as root. The script is available in the directory \textit{/usr/share/tomcat7/reimbursement-database} named \textit{clear-postgres-database.bash}.
 
 \subsection{Front-end}
 
 \begin{itemize}
 
-    \item Create a new file with the following content named \textit{deploy.json}:
+    \item Create a new file with the following content named \textit{deploy.json} in the root folder:
     \begin{lstlisting}
         {
             "username": "",
             "password": ""
         }
     \end{lstlisting}
-    \item Add the credentials to the file deploy.json. The deploy.json file is stored in the main directory.
-    \item Open a command line tool and run \texttt{grunt deploy}. This will automatically deploy the front-end to the server.
-
+    \item Add the credentials to the file. The deploy.json file has to be stored in the main directory.
+    \item Open a command line tool and run \texttt{grunt deploy-int} or \texttt{grunt deploy-prod}. This will automatically deploy the front-end to the INT server or the PROD server. To modify the server's IP address, please refer to the \textit{grunt.js} file that is located in the client's root directory. 
+    
 \end{itemize}
 
 \chapter{Models and Figures}
