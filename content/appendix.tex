@@ -12,12 +12,12 @@ In the following chapters the installation and setup of the back-end is describe
 To install Maven and build the system complete the following steps:
 
 \begin{enumerate}
-    \item Maven should be already integrated in Eclipse for JavaEE developers. If the following steps do not work, download and install maven and the m2e Eclipse plugin. During development, Eclipse Mars 4.5.1 was used.
+    \item Maven should be already integrated in Eclipse for JavaEE developers. If the following steps do not work, download and install Maven and the m2e Eclipse plugin. During development, Eclipse Mars 4.5.1 was used.
     \item Clone or checkout the public reimbursement-server repository hosted on Github (see appendix \ref{github-source}).
     \item Import the project into Eclipse and then convert it to a Maven project.
     \item Run \texttt{mvn:install} to build and download all the dependencies required for the project.
     \item Download Apache Tomcat 8.0. Add the servers-view in Eclipse and click the link to create a new server. Create a new Tomcat server and add the reimbursement-server package to it.
-    \item In the servers-view, double click the server-name and set the port of the Tomcat to 80 instead of 8080 and the startup timeout to approx. 90 seconds.
+    \item In the servers-view, double click the server-name and set the port of the Tomcat to 80 instead of 8080 and the start-up timeout to approx. 90 seconds.
 \end{enumerate}
 
 \subsection{Server Settings}
@@ -29,8 +29,8 @@ In the settings section overall configuration parameters are defined and explain
 Currently the synchronisation interval is set to 300 seconds. This value can be changed by adjusting the variable \textit{reimbursement.ldap.refreshRate} in the \texttt{application.properties} file that is stored in the back-end at \textit{src/main/resources} \par
 During the development and integration a specific file will be loaded that defines the available demo user-accounts for the reimbursement-tool. Those users are defined in the file \texttt{development-server.ldif}. The following users exist:
 \begin{itemize}
-\item \texttt{junior} is a representative for the \textit{JuniorAssistants} group defined in the IFI LDAP tree.
-\item \texttt{senior} is a representative for the \textit{SeniorAssistants} group defined in the IFI LDAP tree.
+\item \texttt{junior} is a representative for the \textit{Junior Assistants} group defined in the IFI LDAP tree.
+\item \texttt{senior} is a representative for the \textit{Senior Assistants} group defined in the IFI LDAP tree.
 \item \texttt{prof} is a representative for the \textit{Professors} group defined in the IFI LDAP tree.
 \item \texttt{fadmin} \& \texttt{fadmin2} are representatives for the \textit{Administration} group defined in the IFI LDAP tree.
 \item \texttt{Depman} is a representative for the \textit{Departement Manager} defined in the IFI LDAP tree.
@@ -44,7 +44,7 @@ For all the demo user-accounts, the password is \textit{password}. To be able to
 \label{subsubsec:email}
 
 The e-mail settings can be adjusted in the \\ \texttt{application.properties} file in the back-end. To change the layout of an email, the corresponding email template has to be adapted. The email templates are stored in the directory \textit{src/main/resources/email}. To adjust an email template, we recommend to change the non-inlined version (\textit{src/main/resources/email/notInlinedTemplates}) and then inline it by using an inlining service like \textit{Ink.} (\url{http://foundation.zurb.com/emails/inliner.html}). To change the wording of the emails, the source texts in the "EmergencyEmailSendJob.java" and "NotificationSendJob.java" classes have to be adapted. These files are stored on the back-end in \textit{/src/main/java/ch/uzh/csg/reimbursement/model} folder. \newline \\
-Some of the variables in the \texttt{application.properties} file depend on the maven profile and are therefore specified in the \texttt{pom.xml} file that is stored in the back-end's root folder.
+Some of the variables in the \texttt{application.properties} file depend on the Maven profile and are therefore specified in the \texttt{pom.xml} file that is stored in the back-end's root folder.
 
 \begin{lstlisting}
 # If true this option stores an HTML
@@ -79,7 +79,7 @@ First we need to install Node.js (incl. npm) and Bower:
 \end{enumerate}
 
 \paragraph{Grunt}
-Grunt builds the front-end files. It has multiple modules to build: you can concat, copy, prefix, sass-compile etc. The configuration of Grunt is stored in \textit{Gruntfile.js} and the modules grunt requires are loaded using npm.
+Grunt builds the front-end files. It has multiple modules to build: you can concatenate, copy, prefix, sass-compile etc. The configuration of Grunt is stored in \textit{Gruntfile.js} and the modules grunt requires are loaded using npm.
 \begin{enumerate}
   \item After all the steps in the npm section are completed, grunt needs to be installed. This can be done by \texttt{npm install -g grunt-cli}. Now we can start using the grunt CLI. There are various options available:
   \begin{itemize}
@@ -94,20 +94,20 @@ Grunt builds the front-end files. It has multiple modules to build: you can conc
 
 \section{Deployment}
 
-\subsection{Backend}
+\subsection{Back-end}
 
-To deploy the software to the intergation or the production environment, the following steps are required:
+To deploy the software to the integration or the production environment, the following steps are required:
 
 \begin{itemize}
-    \item Install maven. During development we used the JavaEE Eclipse as described in  \ref{sec:backend-server}.
-    \item Store the credentials of the Tomcat instance and productive database in the maven directory. The hidden maven directory (\texttt{.m2}) is mostly stored inside the user's root directory. If there is no \texttt{.m2/settings.xml} file, create a new one. The file needs to have the following content:
+    \item Install Maven. During development we used the JavaEE Eclipse as described in  \ref{sec:backend-server}.
+    \item Store the credentials of the Tomcat instance and productive database in the Maven directory. The hidden Maven directory (\texttt{.m2}) is mostly stored inside the user's root directory. If there is no \texttt{.m2/settings.xml} file, create a new one. The file needs to have the following content:
 
     \begin{lstlisting}
-    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+    <settings xmlns="http://Maven.apache.org/SETTINGS/1.0.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="
-            http://maven.apache.org/SETTINGS/1.0.0
-            http://maven.apache.org/xsd/settings-1.0.0.xsd">
+            http://Maven.apache.org/SETTINGS/1.0.0
+            http://Maven.apache.org/xsd/settings-1.0.0.xsd">
     	<servers>
     		<server>
     			<id>reimbursement-server</id>
@@ -144,7 +144,7 @@ To deploy the software to the intergation or the production environment, the fol
     Goals: \texttt{clean tomcat7:redeploy}
     \newline
     Profiles: \texttt{reimbursement\_prod} or \texttt{reimbursement\_int}
-    \item run the new created maven build and the project will be deployed to the production/integration server.
+    \item run the new created Maven build and the project will be deployed to the production/integration server.
 
 \end{itemize}
 
@@ -156,7 +156,7 @@ By default, the profile \textit{reimbursement\_dev} is active. So an LDAP server
 
 \paragraph{Clear PostgresDB}
 \label{sec:clear-postgresdb}
-To monitor the database version, Flyway is used. Flyway checks the database version and notifies about incompatible versions. This requires either to update the database version or to empty the existing database. To empty the existing PostgresDB without loosing database rights etc., a bashscript is available. To run the script, the VM needs to be accessed thru SSH and the script be run as root. The script is available in the directory \textit{/usr/share/tomcat7/reimbursement-database} named \textit{clear-postgres-database.bash}.
+To monitor the database version, Flyway is used. Flyway checks the database version and notifies about incompatible versions. This requires either to update the database version or to empty the existing database. To empty the existing PostgresDB without loosing database rights etc., a bash script is available. To run the script, the VM needs to be accessed thru SSH and the script be run as root. The script is available in the directory \textit{/usr/share/tomcat7/reimbursement-database} named \textit{clear-postgres-database.bash}.
 
 \subsection{Front-end}
 
