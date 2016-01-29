@@ -4,8 +4,8 @@ TODOS:
  discussion of the design choices  a set of arguments on the final design choice
  a list of solved and open issues
 
- 
- 
+
+
 
 \section{System Context}
 
@@ -14,7 +14,7 @@ The reimbursement-tool interacts with several user types as well as external sof
 \subsection{Actors}
 
 The context diagram (see figure \ref{fig:context-diagram}) describes the relationships between the system and its users:
- \textit{Expense Creators}, in short creators, such as assistants, professors and the administrative employees can create, view and print expenses. However, they are only allowed to modify their own expenses while they are in the draft state i.e have not been submitted to the creator's manager yet.  \textit{Managers}, such as professors, the department manager, the head of institute and the \textit{Finance administration} are able to \textit{reject expenses} and send them back to the \textit{Creator}. Besides rejecting expenses, they are also able to modify them. Moreover, \textit{Managers} have also to provide for each expense a project description. \textit{Guests} are allowed to view specific expenses and related expense-items too. However, they need the 32-character long internal expense \textit{Uid} to gain access to the expense's details. The \textit{Uid} is added on the printed expense document (see appendix \ref{sec:app-pdf}).
+ \textit{Expense Creators}, in short creators, such as assistants, professors and the administrative employees can create, view and print expenses. However, they are only allowed to modify their own expenses while they are in the draft state i.e have not been submitted to the \textit{Expense Creators} manager yet.  \textit{Managers}, such as professors, the department manager, the head of institute and the \textit{Finance administration} are able to \textit{reject expenses} and send them back to the \textit{Expense Creators}. Besides rejecting expenses, they are also able to modify them. Moreover, \textit{Managers} have also to provide for each expense a project description. \textit{Guests} are allowed to view specific expenses and related expense-items too. However, they need the 32-character long internal expense \textit{Uid} to gain access to the expense's details. The \textit{Uid} is added on the printed expense document (see appendix \ref{sec:app-pdf}).
 
 \subsection{Services}
 The following sub chapters explain what interfaces to external service providers exist.
@@ -72,8 +72,8 @@ For example: If the presentation layer needs to display an expense, the applicat
 \section{Process flow}
 \label{sec:processflow}
 As stated in section \ref{sec:states} an expense always has to be in one specific state. The entire process implemented in the system is documented in \ref{sec:process-diagram-rotated}.\newline
-The process starts in the lane \textit{Employee}; an expense is created, receipts are added and it is forwarded to the next higher instance for verification. After the verifications by the \textit{Manager} or \textit{Department manager} and \textit{Finance administration} are successful, the signing-process will start. During the signing-process, all three entities; \textit{Employee}, \textit{Manager} and the \textit{Finance administration} need to sign the document. If all of them have signed the document correctly, the \textit{Creator} - the \textit{Employee} - can print the expense and hand it over physically to the \textit{Finance administration}. Currently this process step is not integrated in best practice. Because all of the expense receipts will be printed and after verification of the \textit{Finance administration UZH} it they will be digitalized again. This media disruption is also described in \ref{sec:future-work}.\par
-However, corner-cases for example if a \textit{Manager} will act as a \textit{Creator} the expense will only be submitted to the \textit{Finance administration} for approval. However, during the signing-process the \textit{Manager} deputy has to sign as higher authority.
+The process starts in the lane \textit{Employee}; an expense is created, receipts are added and it is forwarded to the next higher instance for verification. After the verifications by the \textit{Manager} or \textit{Department manager} and \textit{Finance administration} are successful, the signing-process will start. During the signing-process, all three entities; \textit{Employee}, \textit{Manager} and the \textit{Finance administration} need to sign the document. If all of them have signed the document correctly, the \textit{Expense Creator} - the \textit{Employee} - can print the expense and hand it over physically to the \textit{Finance administration}. Currently this process step is not integrated in best practice. Because all of the expense receipts will be printed and after verification of the \textit{Finance administration UZH} it they will be digitalized again. This media disruption is also described in \ref{sec:future-work}.\par
+However, corner-cases for example if a \textit{Manager} will act as a \textit{Expense Creator} the expense will only be submitted to the \textit{Finance administration} for approval. However, during the signing-process the \textit{Manager} deputy has to sign as higher authority.
 
 \subsection{States}
 \label{sec:states}
@@ -90,9 +90,9 @@ During the process an expense passes through various states. An expense is alway
 
     \item \textbf{REJECTED} state occurs if the created expense is not accepted by the \textit{Manager}, \textit{Department manager} or the \textit{Finance administration}. In \textbf{REJECTED} state the expense will be reassigned to the user who created it.
 
-    \item \textbf{SIGNED} state occurs if the expense has been signed by all participants; \textit{Creator}, \textit{Manager} or \textit{Department manager} and \textit{Finance administration}. There exist sub states that occur if the expense is in the process of being signed:
+    \item \textbf{SIGNED} state occurs if the expense has been signed by all participants; \textit{Expense Creator}, \textit{Manager} or \textit{Department manager} and \textit{Finance administration}. There exist sub states that occur if the expense is in the process of being signed:
         \begin{itemize}
-            \item \textbf{TO\_BE\_SIGNED\_BY\_USER} occurs if the expense needs to be signed by the \textit{Creator}.
+            \item \textbf{TO\_BE\_SIGNED\_BY\_USER} occurs if the expense needs to be signed by the \textit{Expense Creator}.
             \item \textbf{TO\_BE\_SIGNED\_BY\_MANAGER} occurs if the expense needs to be \newline signed by the \textit{Manager}.
             \item \textbf{TO\_BE\_SIGNED\_BY\_FINANCE\_ADMIN} occurs if the expense \newline needs to be signed by an user with role \textit{Finance administration}.
         \end{itemize}
@@ -110,7 +110,7 @@ To inform the users of the reimbursement-tool about expense state changes, e-mai
     \item An expense that has been created by a user and is assigned to a \textit{Manager}, will send an e-mail to the respective \textit{Manager}.
     \item An expense that has been approved by the \textit{Manager} and enters the state \newline \textbf{TO\_BE\_ASSIGNED}, will send an e-mail to all available users with role \textit{Finance administration}.
     \item An expense that needs to go through the signing process, will send an e-mail to notify every user who needs to sign the document.
-    \item If an expense is rejected by a \textit{Manager} or the \textit{Finance administration} the \textit{Creator} of the expense will receive an e-mail notification.
+    \item If an expense is rejected by a \textit{Manager} or the \textit{Finance administration} the \textit{Expense Creator} of the expense will receive an e-mail notification.
 \end{itemize}
 
 E-mail notifications will be stored in a queue for each user and mailed to them three times a day in bulk mode. So we guarantee, that a user will not get spammed and the notifications messages are consolidated.
@@ -130,7 +130,7 @@ The reimbursement-tool provides different user roles. Also the roles on the reim
     \item \textbf{Registered user / User} passed the registration process. He can access the reimbursement-tool and create and manage his created expenses. He has one of the following roles:
 
     \begin{itemize}
-        \item \textbf{Creator} is authorized to create and edit expenses as long as they are in DRAFT state.
+        \item \textbf{Expense Creator} is authorized to create and edit expenses as long as they are in DRAFT state.
 
         \item \textbf{Manager / Professor} are authorized to reject, accept and edit expenses as long as it is assigned to him.
 
@@ -182,7 +182,7 @@ The ability to sign the printed Pdf document is crucial so that authenticity is 
 
 The implementation of the digital signature is done using a third party library pdfsign.js \cite{pdfsign} that allows us to do the pdf signing in the browser and not on the server. Due to the requirement, that the private key cannot be uploaded or processed by the server, the signing needs to be done on the client using the web browser.\par
 
-All involved participants need to sign the document; \textit{Creator}, \textit{Manager} and the \textit{Finance administration} to proof their acceptance of the expense and the captured receipts. \par
+All involved participants need to sign the document; \textit{Expense Creator}, \textit{Manager} and the \textit{Finance administration} to proof their acceptance of the expense and the captured receipts. \par
 
 \subsection{Interface}
 
