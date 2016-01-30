@@ -1,4 +1,4 @@
-\chapter{Approach}
+\chapter{Artifact}
 
 TODOS:
  discussion of the design choices  a set of arguments on the final design choice
@@ -14,7 +14,7 @@ The reimbursement-tool interacts with several user types as well as external sof
 \subsection{Actors}
 
 The context diagram (see figure \ref{fig:context-diagram}) describes the relationships between the system and its users:
- \textit{Expense Creators}, in short creators, such as assistants, professors and the administrative employees can create, view and print expenses. However, they are only allowed to modify their own expenses while they are in the draft state i.e have not been submitted to the \textit{Expense Creators} manager yet.  \textit{Managers}, such as professors, the department manager, the head of institute and the \textit{Finance administration} are able to \textit{reject expenses} and send them back to the \textit{Expense Creators}. Besides rejecting expenses, they are also able to modify them. Moreover, \textit{Managers} have also to provide for each expense a project description. \textit{Guests} are allowed to view specific expenses and related expense-items too. However, they need the 32-character long internal expense \textit{Uid} to gain access to the expense's details. The \textit{Uid} is added on the printed expense document (see appendix \ref{sec:app-pdf}).
+ \textit{Expense Creators}, in short creators, such as assistants, professors and the administrative employees can create, view and print expenses. However, they are only allowed to modify their own expenses while they are in the draft state i.e have not been submitted to the \textit{Expense Creators} manager yet.  \textit{Managers}, such as professors, the department manager, the head of institute and the \textit{Finance administration} are able to \textit{reject expenses} and send them back to the \textit{Expense Creators}. Besides rejecting expenses, they are also able to modify them. Moreover, \textit{Managers} have also to provide for each expense a project description. \textit{Finance administrators} can additionally to the \textit{managers} aggregate statistics, search for certain expenses and reset expenses that are stuck in the process (e.g. when a manager would have to sign the expense but left the IFI). \textit{Guests} are allowed to view specific expenses and related expense-items too. However, they need the 32-character long internal expense \textit{Uid} to gain access to the expense's details. The \textit{Uid} is added on the printed expense document (see appendix \ref{sec:app-pdf}).
 
 \subsection{Services}
 The following sub chapters explain what interfaces to external service providers exist.
@@ -40,33 +40,35 @@ To notify users about actions that need their attention, the reimbursement-tool 
 
 \section{Architecture}
 
-The back-end is considered as the software and database running on a Tomcat \cite{tomcat} server and uses PostgreSQL \cite{postgresql} to run the database on. The system is hosted by the IFI. The front-end/client communicates with the back-end using a RESTful service interface described in section \ref{sec:restfulapi}.
+The back-end consists of the software and database running on a Tomcat \cite{tomcat} server and uses PostgreSQL \cite{postgresql} to run the database on. The infrastructure the application runs on is hosted and maintained by the IFI. The front-end/client communicates with the back-end using a RESTful service interface described in section \ref{sec:restfulapi}.
+
+\subsection{Multilayered Architecture}
+We decided to use a common \textit{Multilayered architecture (MLA)}\cite{mla} (see figure \ref{fig:architecture-layer}). The main design principle behind MLA is the Separation of Concerns (SoC), that enforces a division of code with different responsibilities in distinct parts. In consequence, the software is well structured and remains maintainable also over time. The following four layers are essential:
+\begin{itemize}
+	\item The \textbf{Data Access Layer} consists of repositories and the \textit{Hybernate} database abstraction. Depending on the build-profile, different database types are used. The Data Access Layer hides the resulting complexity and provides a uniform interface for storing and retrieving data to and from the database.
+	\item The \textbf{Business Layer} provides the business logic available as services to the \textit{Application Layer}. It performs all business relevant modifications on the models by using the \textit{Data Access Layer}.	
+	\item The \textbf{Application Layer} provides a uniform RESTful API that can be used by any client. This may be a web-application, an app or another server. It hosts the Security part, the REST resources and the Global Exceptions Handlers.
+	\item The \textbf{Presentation Layer} provides the front-end code. In our case it uses AngularJS for the GUI creation. The \textit{Presentation Layer} interacts with the \textit{Application Layer} by accessing its RESTful API using asynchronous Javascript and JSON.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\fbox{\includegraphics[width=0.80\textwidth]{architecture-layer}}
+	\caption{Architecture: Multilayer architecture}
+	\label{fig:architecture-layer}
+\end{figure}
+
+Our layers depend on each other while every layer communicates only with either the upper (consumer) or the lower (service provider) layer. This ensures a good maintainability and loose coupling of the single layers.\newline
+At this point an example should be given: If the \textit{presentation layer} needs to display an expense, the \textit{application layer} will handle this request by first checking the relevant security parameter of the request followed by calling the \textit{business layer}. The \textit{business layer} will handle and aggregate the desired information fetched from the relevant models. In our case to display an expense, the service will retrieve all expense-items and expense-item-attachments from the database using the \textit{data access layer}. Since the \textit{data access layer} provides a uniform interface, the \textit{business layer} does not care if a H2 or Postgres database is used - it just calls the interface and gets the information. The \textit{business layer} passes the data to the \textit{application layer}, where it is serializes as JSON and sent as request-response to the \textit{presentation layer}. There, the data is processed and displayed in the GUI.
 
 \subsection{Back-end}
 The back-end is developed in Java. It is structured according to the rules of a multilayered software architecture. We use the domain driven design \cite{ddd} to apply common patterns for the layers in the back-end. The domain model, that consists of the concepts, is connected to the database. Changes on the model will be automatically synchronized with the database. The service package lists all methods that are used on a domain model.\newline
 DTOs (Data Transfer Object) are used to transfers data from back-end to front-end and vice verse. \newline The implemented model- and service-classes are visualized in appendix \ref{sec:app-models} and \ref{sec:app-service}. \par
 
+
+
 \subsection{Front-end}
-The front-end is developed in JavaScript using the AngularJS \cite{angular} framework. AngularJS is based on an MVC (Model View Controller) pattern. It basically consists of controllers, templates used for the view, as well as models representing the data that is shown to the user using the templates. However, AngularJS \cite{angular} extends the basic MVC concept with useful enhancements like directives, filters, injectors etc. A complete list of the available concepts in AngularJS and small examples can be found at the AngularJS: Developer Guide \cite{angular-devguide}.
-
-\subsection{Multilayer architecture}
-We use a common \textit{Multilayer architecture} (see figure \ref{fig:architecture-layer}) in the back-end to provide a good overview and maintenance of the entire software-code. The following four layers are used:
-\begin{itemize}
-    \item \textbf{Presentation Layer} provides the front-end code. It uses AngularJS for the GUI creation. The \textit{Presentation Layer} interacts with the \textit{Application Layer} using RESTful services.
-    \item \textbf{Application Layer} provides the available services that interact with the \textit{Business Layer}. It hosts the Security, RESTful services and the Global Exceptions.
-    \item \textbf{Business Layer} provides the available services that interact with the \textit{Data Access Layer}. It provides the relevant services and models based on the \textit{Data Access Layer}.
-    \item \textbf{Data Access Layer} consists of repositories and the \textit{Hibernate} database.
-\end{itemize}
-
-\begin{figure}[H]
-    \centering
-    \fbox{\includegraphics[width=0.80\textwidth]{architecture-layer}}
-    \caption{Architecture: Multilayer architecture}
-    \label{fig:architecture-layer}
-\end{figure}
-
-Our layers depend on each other while every layer communicates only with either the upper or the lower layer. This ensures a good maintainability and loose coupling of the single layers.\newline
-For example: If the presentation layer needs to display an expense, the application layer will handle this request by first checking the relevant security parameter of the request followed by calling the business layer. The service will handle and aggregate the desired information fetched from the relevant models. In our case to display an expense, the service will retrieve all expense-items and expense-item-attachments.
+The front-end is developed in JavaScript using the AngularJS framework\cite{angular}. AngularJS is based on an MVC (Model View Controller) pattern. It basically consists of controllers, templates that are used for the view  as well as models representing the data that is shown to the user using the templates. However, AngularJS  extends the basic MVC concept with useful enhancements like directives, filters, injectors etc. A complete list of the available concepts in AngularJS and small examples can be found at the AngularJS: Developer Guide \cite{angular-devguide}.
 
 
 \section{Process flow}
