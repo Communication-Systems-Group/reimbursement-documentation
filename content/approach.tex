@@ -71,41 +71,6 @@ DTOs (Data Transfer Object) are used to transfers data from back-end to front-en
 The front-end is developed in JavaScript using the AngularJS framework\cite{angular}. AngularJS is based on an MVC (Model View Controller) pattern. It basically consists of controllers, templates that are used for the view  as well as models representing the data that is shown to the user using the templates. However, AngularJS  extends the basic MVC concept with useful enhancements like directives, filters, injectors etc. A complete list of the available concepts in AngularJS and small examples can be found at the AngularJS: Developer Guide \cite{angular-devguide}.
 
 
-\section{Process flow}
-\label{sec:processflow}
-As stated in section \ref{sec:states} an expense always has to be in one specific state. The entire process implemented in the system is documented in \ref{sec:process-diagram-rotated}.\newline
-The process starts in the lane \textit{Employee}; an expense is created, receipts are added and it is forwarded to the next higher instance for verification. After the verifications by the \textit{Manager} or \textit{Department manager} and \textit{Finance administration} are successful, the signing-process will start. During the signing-process, all three entities; \textit{Employee}, \textit{Manager} and the \textit{Finance administration} need to sign the document. If all of them have signed the document correctly, the \textit{Expense Creator} - the \textit{Employee} - can print the expense and hand it over physically to the \textit{Finance administration}. Currently this process step is not integrated in best practice. Because all of the expense receipts will be printed and after verification of the \textit{Finance administration UZH} it they will be digitalized again. This media disruption is also described in \ref{sec:future-work}.\par
-However, corner-cases for example if a \textit{Manager} will act as a \textit{Expense Creator} the expense will only be submitted to the \textit{Finance administration} for approval. However, during the signing-process the \textit{Manager} deputy has to sign as higher authority.
-
-\subsection{States}
-\label{sec:states}
-During the process an expense passes through various states. An expense is always in one of the states defined followed. The State-diagram in \ref{sec:state-diagram} describes the expense transformation in viewpoint of states. Users have different roles and therefore have different authorizations to modify the state of an expense.
-
-\begin{itemize}
-    \item \textbf{DRAFT} state occurs if the expense is created and yet has not been assigned to a \textit{Manager}.
-
-    \item \textbf{TO\_BE\_ASSIGNED} state occurs if the expense is submitted, but has not been assigned to a specific manager or the \textit{Finance administration} user. If the expense has been assigned, the expense will either have the state \newline \textbf{ASSIGNED\_TO\_MANAGER} or \newline \textbf{ASSIGNED\_TO\_FINANCE\_ADMIN}.
-
-    \item \textbf{ASSIGNED\_TO\_MANAGER} state occurs if the expense is assigned to a specific \textit{Manager}.
-
-    \item \textbf{ASSIGNED\_TO\_FINANCE\_ADMIN} state occurs if the expense is assigned to a specific \textit{Finance admin}.
-
-    \item \textbf{REJECTED} state occurs if the created expense is not accepted by the \textit{Manager}, \textit{Department manager} or the \textit{Finance administration}. In \textbf{REJECTED} state the expense will be reassigned to the user who created it.
-
-    \item \textbf{SIGNED} state occurs if the expense has been signed by all participants; \textit{Expense Creator}, \textit{Manager} or \textit{Department manager} and \textit{Finance administration}. There exist sub states that occur if the expense is in the process of being signed:
-        \begin{itemize}
-            \item \textbf{TO\_BE\_SIGNED\_BY\_USER} occurs if the expense needs to be signed by the \textit{Expense Creator}.
-            \item \textbf{TO\_BE\_SIGNED\_BY\_MANAGER} occurs if the expense needs to be \newline signed by the \textit{Manager}.
-            \item \textbf{TO\_BE\_SIGNED\_BY\_FINANCE\_ADMIN} occurs if the expense \newline needs to be signed by an user with role \textit{Finance administration}.
-        \end{itemize}
-
-    \item \textbf{PRINTED} state occurs if the expense and all its receipts are successfully converted into a digital document.
-
-    \item \textbf{ARCHIVED} state occurs if the expense has been printed.
-\end{itemize}
-
-The names of the various states are coupled with the user roles. For example \textbf{ASSIGNED\_TO\_FINANCE\_ADMIN} implies that the expense is assigned to all users with roles \textit{Finance administration}.
-
 \subsection{E-mail notification}
 To inform the users of the reimbursement-tool about expense state changes, e-mail notifications have been implemented to notify affected users immediately. E-mail notifications are executed at the following actions:
 \begin{itemize}
@@ -118,31 +83,6 @@ To inform the users of the reimbursement-tool about expense state changes, e-mai
 E-mail notifications will be stored in a queue for each user and mailed to them three times a day in bulk mode. So we guarantee, that a user will not get spammed and the notifications messages are consolidated.
 
 Besides state changes, e-mails will also be sent to an administrator if a general run-time exception occurs. To ensure the administrator of the reimbursement-tool is up-to date about major incidents.
-
-
-\section{User roles}
-\label{user-roles}
-
-The system maps the users available in the IFI LDAP server. So every user that exists in the LDAP is capable to login to the system. He can use the same user name and password that he uses for the other University of Zurich services for login. \par
-
-The reimbursement-tool provides different user roles. Also the roles on the reimbursement-tool are mapped with the LDAP user roles of the University of Zurich. So a user who is defined as professor for a specific group on the LDAP will be the manager for all users of this group. The reimbursement-tool provides the roles with the following authorizations to alter expenses:
-
-\begin{itemize}
-    \item \textbf{Unregistered user} are users, who are authorized to login the reimbursement-tool but have not yet completed the registration process. They have only access to the public REST services (see \ref{sec:rest-services}).
-    \item \textbf{Registered user / User} passed the registration process. He can access the reimbursement-tool and create and manage his created expenses. He has one of the following roles:
-
-    \begin{itemize}
-        \item \textbf{Expense Creator} is authorized to create and edit expenses as long as they are in DRAFT state.
-
-        \item \textbf{Manager / Professor} are authorized to reject, accept and edit expenses as long as it is assigned to him.
-
-        \item \textbf{Department manager} has the same authorizations as the \textit{Manager}. If a \textit{Manager} is outreach, his assignments will be forwarded to the respective \textit{Department manager}.
-
-        \item \textbf{Finance administration} is authorized to reject, accept and edit expenses once they have been accepted by a \textit{Manager} or \textit{Department manager}. Furthermore they can manage the available cost categories and search for expenses.
-
-        \item \textbf{Head of institute} has the same authorizations as the \textit{Manager}. In contrast to the \textbf{Department manager} there exists only one user that can be \textit{Head of institute}. The \textit{Head of institute} will have to approve the expense if, for any reason the \textit{Department manager} is not available.
-    \end{itemize}
-\end{itemize}
 
 
 \section{Technologies}
