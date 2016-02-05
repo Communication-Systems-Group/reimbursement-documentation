@@ -1,9 +1,10 @@
 \chapter{Artifact}
 
+In this chapter, the context, dependencies, architecture, used technologies and testing are presented. design decisions, implementation alternatives and resulting consequences are introduced and discussed along the other topics.
+
+
 TODOS:
 discussion of the design choices  a set of arguments on the final design choice
-a list of solved and open issues
-
 
 
 
@@ -70,7 +71,6 @@ DTOs (Data Transfer Object) are used to transfers data from back-end to front-en
 \subsection{Front-end}
 The front-end is developed in JavaScript using the AngularJS framework\cite{angular}. AngularJS is based on a MVC (Model View Controller) pattern. It basically consists of controllers, templates that are used for the view  as well as models representing the data that is shown to the user using the templates. However, AngularJS  extends the basic MVC concept with useful enhancements like directives, filters, injectors etc. A complete list of the available concepts in AngularJS can be found in the AngularJS Developer Guide \cite{angular-devguide}.
 
-
 \subsection{E-mail Notifications}
 To inform the users of the reimbursement-tool about expense state changes or other issues that require the user's attention, e-mail notifications have been implemented. E-mail notifications are executed at the following actions:
 \begin{itemize}
@@ -84,26 +84,28 @@ E-mail notifications will be stored in a queue for each user and mailed to them 
 
 Besides state changes and to ensure the administrator of the reimbursement-tool is aware to of major incidents, e-mails will also be sent to an administrator if a general run-time exception occurs. 
 
+
 \section{Technologies}
 
-In the following section the technologies used are being described and explained why they had been chosen.
+In the following section the technologies used are described and explained why they were chosen.
 
 \subsection{Back-end}
 
 \subsubsection{Java}
-The reimbursement-tool uses Java SE 7 for the back-end programming language. Java is an industry wide standard, has detailed documentation and there is sufficient knowledge at the IFI department to guarantee an adequate support and further development of the software.
+The reimbursement-tool uses for the back-end part Java SE 7. Java is a mature programming language developed and maintained by Oracle\cite{java}, has detailed documentation and since Java is taught at IFI's Info 1 course, an adequate support and further development of the reimbursement tool can be guaranteed.
 
 \subsubsection{Hibernate}
 \textit{Hibernate} abstracts the data layer. So that SQL-queries have to be written in rare cases only, which increases the code-clarity and decreases the code-complexity. All data operation are handled implicitly by defined Java data classes.\newline
 H2 database is a temporary database for storing data in a database environment. It offers a simple interface and can be used for development, given that only one development database server is available. \cite{hibernate}
 
-\subsubsection{Java Spring Framework}
-We decided to use the \textit{Spring Framework} because it's well documented, widely used and easy to integrate in an existing Java project. Therefore we use various components of the Java Spring Framework \cite{spring}:
+\subsubsection{Spring Framework}
+We decided to use the \textit{Spring Framework}\cite{spring} because it's well documented, widely used and easy to integrate in an existing Java project. Therefore we use various components and sub-packages of Spring. These are:
 \begin{itemize}
 	\item Spring Security for the login- and user-management as well as role based access-management for the RESTful resources.
-	\item Spring Web MVC framework used to define RESTful interface within a few lines of code.
+	\item Spring Web MVC is used to define RESTful interface within a few lines of code.
 	\item Spring ORM used for the XML mapping within the process of Pdf-generation.
-	\item Spring data is used to provide a simpler method to use data access technologies. It uses the DAO (Data Access Object) \cite{dao} to access data in a standard database like SQL.
+	\item Spring Data is used to provide a simpler method to use data access technologies. It uses the DAO (Data Access Object) \cite{dao} to access data in a standard database like SQL.
+	\item Spring Test and Spring Security Test provide means for a convenient integration testing.
 \end{itemize}
 
 \subsubsection{Maven}
@@ -114,7 +116,7 @@ The generated Pdf by the reimbursement-tool needs to be identical to the existin
 The Pdf gets generated using an individual created XSLT template and a XML document generated out of a Java Object. Combining these two files generates an \textit{.fo} document, which will be used by Apache FOP \cite{apache-fop} to generate the Pdf.\par
 We decided for Apache FOP because it is based on widely used standards like XML and XSL so that ongoing maintenance can be achieved easily and without specific knowledge required.
 
-\subsubsection{Digital signature}
+\subsubsection{Pdfsign.js}
 The ability to sign the printed Pdf document is crucial so that authenticity is guaranteed. Especially if the Pdf document will be used as evidence by the Finance Administration of the University of Zurich. The system provides two types of signatures \cite{arx-signature}:
 \begin{itemize}
 	\item A \textbf{Digital signature} ensure the authenticity of the signer. Any changes made to the document after it has been signed will invalidate the signature. To use it the user has to provide his private key to successfully sign the document.
@@ -125,14 +127,14 @@ The implementation of the digital signature is done using a third party library 
 
 All involved participants need to sign the document; \textit{Expense Creator}, \textit{Manager} and the \textit{Finance administration} to proof their acceptance of the expense and the captured receipts. \par
 
-\subsection{Public Interface}
+\subsubsection{Public Interface}
 
-\subsubsection{RESTful API}
+\paragraph{RESTful API}
 \label{sec:restfulapi}
 The tool uses a RESTful API that provides services to access the back-end resources. It is implemented using the Spring MVC. /newline
 The available methods provided by the back-end are listed in \ref{sec:rest-services}. There exist private and public services. Private services can only be access by a \textbf{Registered user / User} (private services are marked with the term PRIVATE).
 
-\subsubsection{Swagger UI}
+\paragraph{Swagger UI}
 The Swagger UI visualizes all methods provided by the RESTful interface using a simple GUI. Furthermore developers can interact directly with the Swagger UI to test the \texttt{HTTP} methods. Figure \ref{fig:swagger01} shows a screen-shot of our Swagger UI. It visualizes all the available methods for the \texttt{public} resource as well as the mandatory and optional parameters for \texttt{HTTP} calls. This was important for the process of development. \cite{swagger} \par
 We decided on Swagger UI, because a simple and easy to understand overview, as well as a simple integration into the software source-code. Further testing the back-end functionality was very simple using Swagger UI.
 
@@ -161,18 +163,13 @@ We used Bower because of its widely used, has a sound documentation and is easy 
 Grunt is a JavaScript task runner. We use it for our client-side build. Its plugin directory supports a lot of modules to optimize the development work flow. Code-uglifying, concatenating, sass-compiling, file operations, auto prefixing etc. \cite{grunt} \par
 We used Grunt because its widely used and there exists sound know how about its usage in our team.
 
-\section{Open Security Issues}
-Someone could exchange the digitally signed pdf document with a manipulated one.
-
-
-
 \section{Testing}
 
 \subsection{Unit Testing}
-Since the application is quite big in scope, the unit testing has in accordance with the supervisors been neglected. To ensure a high software quality, integration tests are preferred.
+Since the application is quite big in scope, the unit testing has in accordance with the supervisors been neglected. To still ensure a high software quality, integration tests are preferred.
 
 \subsection{Integration Testing}
-To detect impact of code changes, integration tests cover the main scenarios. These are:
+To detect the impact of code changes, integration tests cover the main scenarios. These are:
 \begin{itemize}
 	\item Registration
 	\item Login
@@ -182,13 +179,43 @@ To detect impact of code changes, integration tests cover the main scenarios. Th
 	\item Assigning of expenses to Finance Admins
 	\item Validation for Managers
 	\item Digitally Signing
-	\item End-To-End Process for Assistant-Prof-Finadmin
-	\item End-To-End Process for Prof-Depman-Finadmin
-	\item End-To-End Process for Finadmin-Depman-Finadmin
-	\item End-To-End Process for Depman-Headinst-Finadmin
+	\item End-To-End Process for Assistant-Prof-Finadmin-Assistant-Prof-Finadmin
+	\item End-To-End Process for Prof-Finadmin-Prof-Depman-Finadmin
+	\item End-To-End Process for Finadmin-Finadmin2-Finadmin-Depman-Finadmin2
+	\item End-To-End Process for Depman-Finadmin-Depman-Headinst-Finadmin
+	\item End-To-End Process for Headinst-Finadmin-Headinst-Depman-Finadmin
 \end{itemize}
 
 
 \subsection{Load Testing}
+The reimbursement tool has been load-tested using the tools JMeter\cite{jmeter} in combination with VisualVM\cite{visualvm}.
+
+\paragraph{Apache JMeter}
+"... is an open source software designed to load test functional behavior and measure performance. It was originally designed for testing Web Applications but has since expanded to other test functions."\cite{jmeter}.\par
+
+In JMeter, all required steps to perform a document upload have been modelled and compiled into a testsuite.
+
+\paragraph{VisualVM}
+"... is a visual tool integrating several commandline JDK tools and lightweight profiling capabilities. Designed for both production and development time use, it further enhances the capability of monitoring and performance analysis for the Java SE platform."\cite{visualvm}.\par 
+VisualVM enables the live monitoring of the active configuration, heap space, classes, instances and tasks running on the VM, where the application is deployed.\par
+
+To retrieve and display information on applications running on the remote host, the \textbf{jstatd} utility needs to be running on the remote host. Additionally a security policy file must be in place. We prepared our VMs to have the security policy file present in the \textbf{jstatd} folder:  \textit{/usr/lib/jvm/java-7-openjdk-amd64/bin/jstatd.all.policy}.\par
+
+How to start monitorng:
+\begin{itemize}
+	\item SSH to the VM, in our example the INT VM
+	\item in one command: "\textit{sudo jstatd -J-Djava.security.policy=/usr/lib/jvm/java-7-openjdk-amd64/bin/jstatd.all.policy -J-Djava.rmi.server.hostname= \textbf{HOST\_IP\_ADDRESS}}"
+	\item Switch back to your own computer and start VisualVM: it’s located in the Java/JDK/bin folder and is called \textbf{jvisualvm.exe}
+	\item "File" - "Add Remote": Host: 192.41.136.227, Name: whatever you like
+	\item Security note: Watch out to kill the \textbf{jstatd} process manually (kill PID) if the process is not killed on logout or if the terminal looses connection.
+\end{itemize}
+
+\paragraph{Findings}
+The load tests have shown, that the conversion of large images could cause a bottleneck. Since the image-formats are converted to PDF only on the back-end, large images consume a huge amount of the available heap. With 2gb heap space, only 6 parallel uploads of 8mb large images can be handled. A possible work-around would be to convert the images already on the client to pdf-format and only send the pdf-documents to the server.\par
+
+Another potential bottleneck could arise, if large amounts of expenses are in the dashboard. In this case, the back-end would serialize all data required to display these expenses in a single request. This could be mitigated by implement paging i.e. chunks of X expenses are sent to the client. If more expenses are required, the back-end sends the second page, namely the second chunk of X expenses.
 
 \subsection{User and GUI Testing}
+The graphical user interface is simple and practical. Nevertheless it provides a good user guidance and pleases the eye with subtle animations.\par
+
+The user interface of the front-end has been tested through the supervisors and Claudia Leibundgut and has been improved over numerous iterations. Since no business logic is present in the front-end, and the back-end handles all security relevant concerns, the programmatical testing of the front-end has been neglected.
