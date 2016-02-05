@@ -1,6 +1,6 @@
 \chapter{Artifact}
 
-In this chapter, the context, dependencies, architecture, used technologies and testing are presented. design decisions, implementation alternatives and resulting consequences are introduced and discussed along the other topics.
+In this chapter, the context, dependencies, architecture, used technologies and testing are presented. Design decisions, implementation alternatives and resulting consequences are introduced and discussed along the other topics.
 
 
 TODOS:
@@ -190,13 +190,11 @@ To detect the impact of code changes, integration tests cover the main scenarios
 \subsection{Load Testing}
 The reimbursement tool has been load-tested using the tools JMeter\cite{jmeter} in combination with VisualVM\cite{visualvm}.
 
-\paragraph{Apache JMeter}
-"... is an open source software designed to load test functional behavior and measure performance. It was originally designed for testing Web Applications but has since expanded to other test functions."\cite{jmeter}.\par
+\paragraph{Apache JMeter} "JMeter is an open source software designed to load test functional behavior and measure performance. It was originally designed for testing Web Applications but has since expanded to other test functions."\cite{jmeter}.\par
 
 In JMeter, all required steps to perform a document upload have been modelled and compiled into a testsuite.
 
-\paragraph{VisualVM}
-"... is a visual tool integrating several commandline JDK tools and lightweight profiling capabilities. Designed for both production and development time use, it further enhances the capability of monitoring and performance analysis for the Java SE platform."\cite{visualvm}.\par 
+\paragraph{VisualVM} "VisualVM is a visual tool integrating several commandline JDK tools and lightweight profiling capabilities. Designed for both production and development time use, it further enhances the capability of monitoring and performance analysis for the Java SE platform."\cite{visualvm}.\par 
 VisualVM enables the live monitoring of the active configuration, heap space, classes, instances and tasks running on the VM, where the application is deployed.\par
 
 To retrieve and display information on applications running on the remote host, the \textbf{jstatd} utility needs to be running on the remote host. Additionally a security policy file must be in place. We prepared our VMs to have the security policy file present in the \textbf{jstatd} folder:  \textit{/usr/lib/jvm/java-7-openjdk-amd64/bin/jstatd.all.policy}.\par
@@ -213,7 +211,7 @@ How to start monitorng:
 \paragraph{Findings}
 The load tests have shown, that the conversion of large images could cause a bottleneck. Since the image-formats are converted to PDF only on the back-end, large images consume a huge amount of the available heap. With 2gb heap space, only 6 parallel uploads of 8mb large images can be handled. A possible work-around would be to convert the images already on the client to pdf-format and only send the pdf-documents to the server.\par
 
-Another potential bottleneck could arise, if large amounts of expenses are in the dashboard. In this case, the back-end would serialize all data required to display these expenses in a single request. This could be mitigated by implement paging i.e. chunks of X expenses are sent to the client. If more expenses are required, the back-end sends the second page, namely the second chunk of X expenses.
+Another potential bottleneck could arise, if large amounts of expenses are in the dashboard. In this case, the back-end would serialize all data required to display these expenses in a single request. This could be mitigated by implement pagination i.e. chunks of N expenses are sent to the client. If more expenses are required, the back-end sends the second page, namely the second chunk of N expenses.
 
 \subsection{User and GUI Testing}
 The graphical user interface is simple and practical. Nevertheless it provides a good user guidance and pleases the eye with subtle animations.\par

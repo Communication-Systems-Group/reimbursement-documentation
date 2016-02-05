@@ -5,31 +5,52 @@ TODOS:
  a list of solved and open issues
  
  
- \section{Open Security Issues}
- Someone could exchange the digitally signed pdf document with a manipulated one.
+ \section{Security Information}
+The currently implemented electronic signing is, in contrast to the digital signing, not bullet proof. Although the reimbursement-tool prevents any user (using our front-end) to edit a document that has been signed electronically, any user can manipulate the generated pdf before submitting it to the Finance Administration of the University in paper form. This is a flaw that could be mitigated by shifting the responsibility for sending the final document to the Finance Administration of UZH to IFI's finance administration.
  
  
 \section{Summary}
 
-The reimbursement process at the IFI department of the University of Zurich was based on a single MS-Office Excel file that has been used to capture the receipt expenses and pass them physically through the entire reimbursement process. For the participants it was difficult because they had to pass the digital Excel file and the physical receipts to the next member in the process. The extra effort needed and increasing digitization of the employees leads to the idea to digitize the entire process by a single system.\newline
-It was developed in order to reduce the effort needed of the participants in the process and to increase the efficiency and flexibility in capturing receipts, by allowing the user to add them on the go using a smart phone. Besides that, the Finance Administration of the IFI department will get analytical tools to gain a better insight knowledge of the state-distribution of expense while in the reimbursement process. The integrated search engine allows them to search and retrieve archived expenses within seconds. \par
-Overall the system works. Expenses can be created, modified, deleted and passed during the entire process. They can be printed as a Pdf. The Pdf document fulfil all requirements of the Finance Administration of the IFI. However, there are still some open tasks need to be done in the future to improve the embedding of the systems into the environment.
+The reimbursement process at the Department of Informatics (IFI) at the University of Zurich was based on a MS-Office Excel form that has been used to capture the receipt expenses and pass them physically through the entire reimbursement process. For the participants this was impractical and time consuming: they had to pass the digital Excel file and the physical receipts to the next member in the process.\par
 
-\section{Achieved work}
-	features of the tool like a sales pitch to show what we did!
+In order to make the reimbursement-creation-process as smooth as possible, we developed a web application that supports Expense Creators, Manager and the Finance Administration personnel in their respective tasks in the process. The web application reduces the overall efforts needed to create, validate and sign expenses and likewise helps all participants to focus on their work which results in an overall raised productivity and, what is also important, in lover operational costs. Besides that, the Finance Administration of the IFI department gets an analytical tool to gain a better knowledge of the state-distribution in the reimbursement-process. The integrated search engine allows them to search, retrieve and reset expenses in seconds. \par
+
+The reimbursement-tool in its current state, fulfills all requirements: Expenses can be created, modified, deleted and passed during the entire process. They can be printed as a Pdf and the Pdf document is in line with the specification given by the Finance Administration of the University of Zurich. \par
+
+As an extra, the reimbursement-tool provides the "Guest View". The guest view is a view especially designed and implemented to allow an anonymous user (p.ex the Finance Administration of the University) to view a dedicated expense with related expense items and all other information. This is a "Goodie"-Feature which should be used to convince the Finance Administration of the UZH to re-think the current absurdity and inefficiency in their end-to-end process.\par
+
+However, during the project, several other future possibilities for improvements have emerged. These are summarized in the next chapter.
 
 \section{Future work}
 \label{sec:future-work}
 
-The current implementation of the reimbursement-tool covers the basic features to run the entire reimbursement-process at the IFI digitally. However, there is still some future work to be done, which will be addressed in the following subsections. 
+The current implementation of the reimbursement-tool covers the basic features to run the entire reimbursement-creation-process digitally without any media disruption. However, there are still some possibilities for future improvements.
 
-\subsection{Pdf version 1.5}
-During the development of the reimbursement-tool a new version of the Pdf document, that needs to be delivered to the Finance Administration of the University of Zurich, was published. Obviously the new requirements need to be implemented in a future step.
+\subsection{Technical improvements}
+\subsubsection{New Excel Form Version}
+During the development of the reimbursement-tool, a new specification of the MS-Excel form has been announced. This form will be introduced in mid 2016 and the current PDF-generation has to be adapted in time. Obviously the new requirements need to be implemented in a future step.
 
-\subsection{Process integration to UZH}
-Currently the expenses will be printed and delivered to the Finance Administration of the University of Zurich in paper format. In turn they will be scanned to be digitalized and archived at the Finance Administration of the University of Zurich. If this media disruption could be suspended, the overall process efficiency increases. The system is ready to integrate the last instance in the process - the Finance Administration of the University of Zurich - however, this will be an ongoing process that need to be dealt with. The system provides a guest-view to point out the value of the tool.
+\subsubsection{Spring Profiles}
+Spring Profiles would allow a convenient and nice way to activate and deactivate single extensions like the e-mail service, swagger-ui or the LDAP synchronisation.
+
+\subsubsection{Mitigation of Performance-Bottlenecks}
+During load-testing of our application, we spotted potential memory bottlenecks. 
+
+\textbf{Image conversion:} If users upload large images (> 8mb), the conversion of the image-formats to the PDF-format consumes quite a lot of the available heap space. \textit{Work-around:} there exist libraries that allow the pdf creation already on the client.\par 
+ 	
+\textbf{Large Amount of expenses:} If a lot of expenses (> 100) have to be serialized and sent in a single request, the serialization can lead to an OutOfMemoryError and is visible as a HTTP 500 error code in the frontend together with a stacktrace. Since Spring only catches exceptions but no errors, this error is not transformed to our nice default error message. \textit{Workaround: } To mitigate this large number of expenses in a single request, pagination could be implemented. The client requests only a defined number of expenses based on some filter criteria. All other expenses are loaded only on demand and in chunks of the same size.
 
 
-\subsection{Further process improvements}
-- fadmins sollen das zeugs drucken und auch verschicken
-- am besten sollte gar nichts mehr verschickt werden, ausser das email für die finabteilung der uzh und das soll auch claudia machen nach dem signirern...
+
+\subsection{Process improvements}
+\subsubsection{Process integration to UZH}
+Currently the expenses will be printed and delivered to the Finance Administration of the University of Zurich in paper format. In turn, they will be scanned to be digitalized and archived at the Finance Administration of the University of Zurich. If this media disruption could be suspended, the overall process efficiency increases. The system is ready to integrate the last instance in the process - the Finance Administration of the University of Zurich. The system provides a guest-view to point out the value of the tool.\par
+
+\subsubsection{Further automation}
+If we assume that the Finance Administration of UZH allows a pure digital form of data-exchange, then further improvements are possible: Since the reimbursement-tool provides already an e-mail service, it would make sense to automate the e-mail sending. Instead of print the document, the e-mail service could send the document to a defined e-mail address. Another option would be to provide a public API to the Finance Department, to enable a programmatical data exchange.\par 
+
+\subsection{Feature improvements}
+\subsubsection{Employee bank account data}In conversations with employees at the IFI, we often heard complaints about wrong personal data. Our reimbursement-tool could also be extend to provide more information about the Expense Creators: this could be the account data, address and other personal information. Storing this information in the reimbursement system offers the benefit that users can update their information at any time and the Finance Administration of the UZH is always up-to-date regarding account-number changes etc.
+
+\subsubsection{Real archiving for Sysadmins} 
+Currently the reimbursement system allows to archive an expense. This allows to separate active and archived expenses in different requests. The archived expenses remain in the same database as also the active ones. Currently, there is no "easy" way to move archived expenses from one database to another.
