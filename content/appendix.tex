@@ -41,7 +41,7 @@ During the development and integration a specific file will be loaded that defin
 For all the demo user-accounts, the password is \textit{password}. To be able to login with the demo users, the test-ldap server has to run (is automatically started if the build profile is "DEV" or "INT") and also the demo-user SQL has to update the SQL Database (also done automatically in the "DEV" or "INT" profiles).
 
 \subsubsection{E-mail server}
-\label{subsubsec:email}
+\label{subsubsec:e-mail}
 
 The e-mail settings can be adjusted in the \\ \texttt{application.properties} file in the back-end. To change the layout of an email, the corresponding email template has to be adapted. The email templates are stored in the directory \textit{src/main/resources/email}. To adjust an email template, we recommend to change the non-inlined version (\textit{src/main/resources/email/notInlinedTemplates}) and then inline it by using an inlining service like \textit{Ink.} (\url{http://foundation.zurb.com/emails/inliner.html}). To change the wording of the emails, the source texts in the "EmergencyEmailSendJob.java" and "NotificationSendJob.java" classes have to be adapted. These files are stored on the back-end in \textit{/src/main/java/ch/uzh/csg/reimbursement/model} folder. \newline \\
 Some of the variables in the \texttt{application.properties} file depend on the Maven profile and are therefore specified in the \texttt{pom.xml} file that is stored in the back-end's root folder.
@@ -214,22 +214,6 @@ To monitor the database version, Flyway is used. Flyway checks the database vers
 \subsection{PUBLIC: various services}
 \begin{figure}[H]
     {\includegraphics[width=0.95\textwidth]{rest-services_public}}
-\end{figure}
-\newpage
-
-\section{Process diagram}
-\label{sec:process-diagram-rotated}
-
-\begin{figure}[H]
-    {\includegraphics[width=0.75\textwidth]{process-diagram-rotated}}
-\end{figure}
-\newpage
-
-\section{State diagram}
-\label{sec:state-diagram}
-
-\begin{figure}[H]
-    {\includegraphics[width=0.8\textwidth]{state-diagram}}
 \end{figure}
 \newpage
 

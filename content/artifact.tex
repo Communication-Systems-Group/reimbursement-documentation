@@ -17,7 +17,7 @@ The reimbursement-tool interacts with several user types as well as external sof
 The context diagram (see figure \ref{fig:context-diagram}) describes the relationships between the system and its users:
 \textit{Expense Creators}, in short creators, such as assistants, professors and the administrative employees can create, view and print expenses. However, they are only allowed to modify their own expenses while they are in the draft state i.e have not been submitted to the \textit{Expense Creators} manager yet.  \textit{Managers}, such as professors, the department manager, the head of institute and the \textit{Finance administration} are able to \textit{reject expenses} and send them back to the \textit{Expense Creators}. Besides rejecting expenses, they are also able to modify them. Moreover, \textit{Managers} have also to provide for each expense a project description. \textit{Finance administrators} can additionally to the \textit{managers} aggregate statistics, search for certain expenses and reset expenses that are stuck in the process (e.g. when a manager would have to sign the expense but left the IFI). \textit{Guests} are allowed to view specific expenses and related expense-items too. However, they need the 32-character long internal expense \textit{Uid} to gain access to the expense's details. The \textit{Uid} is added on the printed expense document (see appendix \ref{sec:app-pdf}).
 
-\subsection{Services}
+\subsection{Services and Dependencies}
 The following sub chapters explain what interfaces to external service providers exist.
 
 \subsubsection{IFI LDAP Server}
@@ -37,6 +37,38 @@ Often expenses accrue in foreign currencies but are paid back in CHF. To provide
 To notify users about actions that need their attention, the reimbursement-tool implements a notification algorithm. As soon as a new action has to be taken, the notification service adds the user's e-mail address to the e-mailing list. Emails are sent out only three times a day (8am, 12pm and 5pm). At this points in time, the e-mailing list is processed by checking if there are still actions that need the user's attention. If that is the case, an e-mail is sent out. If in the meantime the user took the required action, no e-mail is sent out. If after an e-mail sending no new action occurs that requires the user's attention, no reminder-e-mail will be sent although there are remaining actions. For the actual e-mail sending, the reimbursement-tool integrates the IFI Email Server. For more information about adjusting the e-mail settings please refer to appendix \ref{subsubsec:e-mail}.
 
 \newpage
+
+
+
+\section{Special Features}
+
+\subsection{E-mail Notifications}
+\label{sec:emailnotification}
+To inform the users of the reimbursement-tool about expense state changes or other issues that require the user's attention, e-mail notifications have been implemented. E-mail notifications are executed at the following actions:
+\begin{itemize}
+	\item An expense, that has been created by a \textit{Expense Creator}, is assigned to a \textit{Manager}. An e-mail will be sent to the respective \textit{Manager}.
+	\item An expense that has been approved by the \textit{Manager} and enters the state \newline \textbf{TO\_BE\_ASSIGNED}. This will trigger an e-mail to all available users with role \textit{Finance administration}.
+	\item An expense that needs to go through the signing process. The next user in the row will get an e-mail. First the \textit{Expense Creator}, then it's \textit{Manager} and finally the assigned person from the \textit{Finance administration}.
+	\item If an expense is rejected by a \textit{Manager} or the \textit{Finance administration} the \textit{Expense Creator} of the expense will receive an e-mail notification.
+\end{itemize}
+
+E-mail notifications will be stored in a queue for each user and mailed to them three times a day in bulk mode. So we guarantee, that a user will not get spammed and the notifications messages are consolidated.
+
+Besides state changes and to ensure the administrator of the reimbursement-tool is aware to of major incidents, e-mails will also be sent to an administrator if a general run-time exception occurs.
+
+\subsection{LDAP Synchronisation}
+\subsection{Currency Conversion}
+\subsection{Expense Reset Options}
+\subsection{Signature Pad and Mobile Signature}
+\subsection{Attachment Upload and Mobile Attachment Upload}
+\subsection{Pure Offline Signing}
+\subsection{Guest View}
+\subsection{Multi-language capability}
+\subsection{CORS and CSRF support}
+\subsection{Expense Search Engine}
+\subsection{Deputy Feature}
+\subsection{Basic Statistics Feature}
+\subsection{Expense Pool}
 
 
 \section{Architecture}
@@ -70,20 +102,6 @@ DTOs (Data Transfer Object) are used to transfers data from back-end to front-en
 
 \subsection{Front-end}
 The front-end is developed in JavaScript using the AngularJS framework\cite{angular}. AngularJS is based on a MVC (Model View Controller) pattern. It basically consists of controllers, templates that are used for the view  as well as models representing the data that is shown to the user using the templates. However, AngularJS  extends the basic MVC concept with useful enhancements like directives, filters, injectors etc. A complete list of the available concepts in AngularJS can be found in the AngularJS Developer Guide \cite{angular-devguide}.
-
-\subsection{E-mail Notifications}
-To inform the users of the reimbursement-tool about expense state changes or other issues that require the user's attention, e-mail notifications have been implemented. E-mail notifications are executed at the following actions:
-\begin{itemize}
-	\item An expense, that has been created by a \textit{Expense Creator}, is assigned to a \textit{Manager}. An e-mail will be sent to the respective \textit{Manager}.
-	\item An expense that has been approved by the \textit{Manager} and enters the state \newline \textbf{TO\_BE\_ASSIGNED}. This will trigger an e-mail to all available users with role \textit{Finance administration}.
-	\item An expense that needs to go through the signing process. The next user in the row will get an e-mail. First the \textit{Expense Creator}, then it's \textit{Manager} and finally the assigned person from the \textit{Finance administration}.
-	\item If an expense is rejected by a \textit{Manager} or the \textit{Finance administration} the \textit{Expense Creator} of the expense will receive an e-mail notification.
-\end{itemize}
-
-E-mail notifications will be stored in a queue for each user and mailed to them three times a day in bulk mode. So we guarantee, that a user will not get spammed and the notifications messages are consolidated.
-
-Besides state changes and to ensure the administrator of the reimbursement-tool is aware to of major incidents, e-mails will also be sent to an administrator if a general run-time exception occurs. 
-
 
 \section{Technologies}
 
@@ -163,6 +181,8 @@ We used Bower because of its widely used, has a sound documentation and is easy 
 Grunt is a JavaScript task runner. We use it for our client-side build. Its plugin directory supports a lot of modules to optimize the development work flow. Code-uglifying, concatenating, sass-compiling, file operations, auto prefixing etc. \cite{grunt} \par
 We used Grunt because its widely used and there exists sound know how about its usage in our team.
 
+
+
 \section{Testing}
 
 \subsection{Unit Testing}
@@ -176,8 +196,8 @@ To detect the impact of code changes, integration tests cover the main scenarios
 	\item Expense Creation
 	\item Expense Item Creation
 	\item Attachment upload
-	\item Assigning of expenses to Finance Admins
-	\item Validation for Managers
+	\item Assigning of expenses to IFI Finadmins
+	\item Validation of Expenses (Managers and IFI Finadmins)
 	\item Digitally Signing
 	\item End-To-End Process for Assistant-Prof-Finadmin-Assistant-Prof-Finadmin
 	\item End-To-End Process for Prof-Finadmin-Prof-Depman-Finadmin

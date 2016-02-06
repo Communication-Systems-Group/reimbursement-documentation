@@ -1,22 +1,53 @@
 \chapter{Process}
 
-\section{As-is / Current Reimbursement Process}
+\section{Process capturing}
+The as-is / current process has been reverse engineered based on the documents, regulations and policies that the finance administration UZH provides to the finance administrations at the individual departments. Moreover also several semi-structured and informal interviews with Claudia Leibundgut from the finance administration IFI and with researchers at the Communication Systems Group (CSG) have been conducted.\par
+The emerged process has then been digitally enabled and validated again in collaboration with Claudia Leibundgut (representative for the finance administration IFI) and Thomas Bocek (representative for the CSG).
 
-
-
-
-
-\section{Process Reimbursement-tool}
-
-\subsection{Flow}
+\section{Digitally enabled reimbursement process}
 \label{sec:processflow}
-As stated in section \ref{sec:states} an expense always has to be in one specific state. The entire process implemented in the system is documented in \ref{sec:process-diagram-rotated}.\newline
-The process starts in the lane \textit{Employee}; an expense is created, receipts are added and it is forwarded to the next higher instance for verification. After the verifications by the \textit{Manager} or \textit{Department manager} and \textit{Finance administration} are successful, the signing-process will start. During the signing-process, all three entities; \textit{Employee}, \textit{Manager} and the \textit{Finance administration} need to sign the document. If all of them have signed the document correctly, the \textit{Expense Creator} - the \textit{Employee} - can print the expense and hand it over physically to the \textit{Finance administration}. Currently this process step is not integrated in best practice. Because all of the expense receipts will be printed and after verification of the \textit{Finance administration UZH} it they will be digitalized again. This media disruption is also described in \ref{sec:future-work}.\par
-However, corner-cases for example if a \textit{Manager} will act as a \textit{Expense Creator} the expense will only be submitted to the \textit{Finance administration} for approval. However, during the signing-process the \textit{Manager} deputy has to sign as higher authority.
+The process starts in the lane \textit{Expense Creator}; an expense is created, receipts are added and the expense as a whole is forwarded to the next higher instance for verification. After the verifications by the \textit{Manager} or its \textit{Deputy} and by the \textit{Finance administration IFI} are successful, the signing-process will start.\newline
+During the signing-process, all three entities, namely the \textit{Expense Creator}, the \textit{Manager / Deputy} and the \textit{Finance administration IFI} need to sign the document. All entities can only sign with the same type of signing, i.e. all digitally or all electronically. If all of them have signed the document, the \textit{Expense Creator} can print the expense and hand it over physically to the \textit{Finance administration IFI}.\newline
+Since this part of the process is still performed manually, Claudia Leibundgut proposed that the Expense Creators should send the post-mail directly to the Finance administration of UZH. This bears the risk that manipulations by the Expense Creators go unnoticed.\newline
+At the point of printing, the sub-process "expense-creation" is at its end and all further activities are out of scope of the reimbursement tool, as it is specified in the project scope. The chapter \ref{sec:future-work} offers further improvements to the current, and even more important, to the part of the process that currently is out of scope. To name an example, all of the expense receipts will be printed and after verification through the \textit{Finance administration UZH} they will be digitalized again. This media disruption could be resolved by extending our tool.\par
+
+
+This new process implies certain roles and states. These are further described in section \ref{sec:states} and \ref{sec:user-roles}
+\newline
+
+\subsection{Finance Administration's Expense Pool}
+The finance administration's expense pool is a container for all expenses that were submitted to IFI's finance administration personnel. Every finance administrator can self-assign these expenses and validate or reject them.
+
+\subsection{Corner Cases}
+If a \textit{Manager} will act as a \textit{Expense Creator} the expense will only be submitted to the \textit{Finance administration} for approval. During the signing-process, the \textit{Manager}'s manager has to sign as a higher authority.\newline
+Analogous if the \textit{Expense Creator} is \textit{Finance administrator IFI}, \textit{Department Manager} or \textit{Head of Institute}.\par 
+At this point, an illustrative step-through my be clarifying:
+	
+	\begin{itemize}
+		\item \textbf{Step-Through:} (create) - (validate) - (sign) - (sign) - (sign)
+		\item \textbf{Prof:} Prof - Fadmin IFI - Prof - Depman - Fadmin IFI
+		\item \textbf{Depman:} Depman - Fadmin IFI - Depman - Headinst  - Fadmin IFI
+		\item \textbf{Headinst:} Headinst - Fadmin IFI - Headinst - Depman - Fadmin IFI	
+	\end{itemize}
+	
+Another corner case are finance administration personnel: Here, after the creation of the expense, the expense is sent straight to the finance administration's "expense pool". In the case of finance administrators submitting their expenses to the pool, of course these expenses cannot be self-assigned and only validated by other finance administrator but not themselves.
+
+\begin{itemize}
+	\item \textbf{Fadmin:} fadmin1 ifi - fadmin2 ifi - fadmin1 ifi - depman - fadmin2 ifi
+\end{itemize}
+
+
+\newpage
+\subsection{Process diagram}
+\label{sec:process-diagram-rotated}
+	\begin{figure}[H]
+		{\includegraphics[width=0.75\textwidth]{process-diagram-rotated}}
+	\end{figure}
+\newpage
 
 \subsection{States}
 \label{sec:states}
-During the process an expense passes through various states. An expense is always in one of the states defined followed. The State-diagram in \ref{sec:state-diagram} describes the expense transformation in viewpoint of states. Users have different roles and therefore have different authorizations to modify the state of an expense.
+During the process an expense passes through various states. An expense is always in one and only one of the states defined in the following section. The State-diagram in \ref{sec:state-diagram} visualizes the pass through graphically. Users have different roles and therefore also different competencies to modify the state of an expense.
 
 \begin{itemize}
 	\item \textbf{DRAFT} state occurs if the expense is created and yet has not been assigned to a \textit{Manager}.
@@ -42,9 +73,18 @@ During the process an expense passes through various states. An expense is alway
 \end{itemize}
 
 The names of the various states are coupled with the user roles. For example \textbf{ASSIGNED\_TO\_FINANCE\_ADMIN} implies that the expense is assigned to all users with roles \textit{Finance administration}.
+\newpage
+
+\subsection{State diagram}
+\label{sec:state-diagram}
+
+\begin{figure}[H]
+	{\includegraphics[width=0.8\textwidth]{state-diagram}}
+\end{figure}
+\newpage
 
 \section{User roles}
-\label{user-roles}
+\label{sec:user-roles}
 
 The system maps the users available in the IFI LDAP server. So every user that exists in the LDAP is capable to login to the system. He can use the same user name and password that he uses for the other University of Zurich services for login. \par
 
