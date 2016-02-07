@@ -11,12 +11,9 @@ During the signing-process, all three entities, namely the \textit{Expense Creat
 Since this part of the process is still performed manually, Claudia Leibundgut proposed that the Expense Creators should send the post-mail directly to the Finance administration of UZH. This bears the risk that manipulations by the Expense Creators go unnoticed.\newline
 At the point of printing, the sub-process "expense-creation" is at its end and all further activities are out of scope of the reimbursement tool, as it is specified in the project scope. The chapter \ref{sec:future-work} offers further improvements to the current, and even more important, to the part of the process that currently is out of scope. To name an example, all of the expense receipts will be printed and after verification through the \textit{Finance administration UZH} they will be digitalized again. This media disruption could be resolved by extending our tool.\par
 
-
 This new process implies certain roles and states. These are further described in section \ref{sec:states} and \ref{sec:user-roles}
 \newline
 
-\subsection{Finance Administration's Expense Pool}
-The finance administration's expense pool is a container for all expenses that were submitted to IFI's finance administration personnel. Every finance administrator can self-assign these expenses and validate or reject them.
 
 \subsection{Corner Cases}
 If a \textit{Manager} will act as a \textit{Expense Creator} the expense will only be submitted to the \textit{Finance administration} for approval. During the signing-process, the \textit{Manager}'s manager has to sign as a higher authority.\newline
@@ -72,7 +69,7 @@ During the process an expense passes through various states. An expense is alway
 	\item \textbf{ARCHIVED} state occurs if the expense has been printed.
 \end{itemize}
 
-The names of the various states are coupled with the user roles. For example \textbf{ASSIGNED\_TO\_FINANCE\_ADMIN} implies that the expense is assigned to all users with roles \textit{Finance administration}.
+The names of the various states are coupled with the user roles. For example \textbf{ASSIGNED\_TO\_FINANCE\_ADMIN} implies that the expense is assigned to a user with role \textit{Finance Administration}.
 \newpage
 
 \subsection{State diagram}

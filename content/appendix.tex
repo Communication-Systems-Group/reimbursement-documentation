@@ -63,6 +63,19 @@ mail.sendEmailsIntervalCron = ${mail.sendEmailsIntervalCron}
 The \textit{.xsl} file is used to generate an \textit{.fo} file out of an xml-file that consists of object data. In the folder \textit{src/main/resources} exists a \texttt{xml-mapping.xml} file that maps a data-object to a xml-object. The xml-object is required by the \texttt{xml2fo.xsl} and \texttt{attachmentXml2fo.xsl}. Those files transfer the xml-object into a \textit{.fo} file which is needed by the Apache FOP to generate the Pdf.
 
 
+\subsubsection{Remote Host Monitoring with VisualVM}
+\label{appendix:visualvm}
+To retrieve and display information on applications running on the remote host, the \textbf{jstatd} utility needs to be running on the remote host. Additionally a security policy file must be in place. We prepared our VMs to have the security policy file present in the \textbf{jstatd} folder:  \textit{/usr/lib/jvm/java-7-openjdk-amd64/bin/jstatd.all.policy}.\par
+
+How to start the monitoring:
+\begin{itemize}
+	\item SSH to the VM, in our example the INT VM
+	\item in one command: "\textit{sudo jstatd -J-Djava.security.policy=/usr/lib/jvm/java-7-openjdk-amd64/bin/jstatd.all.policy -J-Djava.rmi.server.hostname= \textbf{HOST\_IP\_ADDRESS}}"
+	\item Switch back to your own computer and start VisualVM: it’s located in the Java/JDK/bin folder and is called \textbf{jvisualvm.exe}
+	\item "File" - "Add Remote": Host: 192.41.136.227, Name: whatever you like
+	\item Security note: Watch out to kill the \textbf{jstatd} process manually (kill PID) if the process is not killed on logout or if the terminal looses connection.
+\end{itemize}
+
 
 \section{Front-end / Client}
 

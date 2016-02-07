@@ -1,12 +1,6 @@
 \chapter{Artifact}
 
-In this chapter, the context, dependencies, architecture, used technologies and testing are presented. Design decisions, implementation alternatives and resulting consequences are introduced and discussed along the other topics.
-
-
-TODOS:
-discussion of the design choices  a set of arguments on the final design choice
-
-
+In this chapter, the system's context and it's dependencies, the architecture, some interesting features, used technologies and conducted testing are presented. Design decisions, implementation alternatives and resulting consequences are introduced and discussed along the lines.
 
 \section{System Context}
 
@@ -15,13 +9,7 @@ The reimbursement-tool interacts with several user types as well as external sof
 \subsection{Actors}
 
 The context diagram (see figure \ref{fig:context-diagram}) describes the relationships between the system and its users:
-\textit{Expense Creators}, in short creators, such as assistants, professors and the administrative employees can create, view and print expenses. However, they are only allowed to modify their own expenses while they are in the draft state i.e have not been submitted to the \textit{Expense Creators} manager yet.  \textit{Managers}, such as professors, the department manager, the head of institute and the \textit{Finance administration} are able to \textit{reject expenses} and send them back to the \textit{Expense Creators}. Besides rejecting expenses, they are also able to modify them. Moreover, \textit{Managers} have also to provide for each expense a project description. \textit{Finance administrators} can additionally to the \textit{managers} aggregate statistics, search for certain expenses and reset expenses that are stuck in the process (e.g. when a manager would have to sign the expense but left the IFI). \textit{Guests} are allowed to view specific expenses and related expense-items too. However, they need the 32-character long internal expense \textit{Uid} to gain access to the expense's details. The \textit{Uid} is added on the printed expense document (see appendix \ref{sec:app-pdf}).
-
-\subsection{Services and Dependencies}
-The following sub chapters explain what interfaces to external service providers exist.
-
-\subsubsection{IFI LDAP Server}
-The reimbursement-tool fetches user-data from the IFI LDAP server (see figure \ref{fig:context-diagram}) and stores it in the reimbursement-database. By being able to reuse the existing LDAP credentials, the user gets a comfortable way to login and ensures at the same time that only authenticated users gain access to the system. Furthermore, the user's current roles and the user's manager are assigned automatically. If there is no manager specified in the LDAP, a warning is shown to the user. For details about how to adjust the LDAP settings please refer to appendix \ref{subsubsec:ldap}.
+\textit{Expense Creators}, such as assistants, professors and other employees can create, view and print expenses. However, they are only allowed to modify their own expenses while they are in the draft state i.e have not been submitted to the \textit{Expense Creator}'s manager yet.  \textit{Managers}, such as professors, the department manager, the head of institute and the \textit{Finance administration} personnel are able to \textit{reject expenses} and send them back to the \textit{Expense Creators}. Besides rejecting expenses, they are also able to modify them. Moreover, \textit{Managers} have also to provide for each expense a project description. \textit{Finance administrators} can additionally to the \textit{managers} aggregate statistics, search for certain expenses and reset expenses that are stuck in the process (e.g. when a manager would have to sign the expense but left the IFI). \textit{Guests} are allowed to view specific expenses and related expense-items too. However, they need the 32-character long internal expense \textit{Uid} to gain access to the expense's details. The \textit{Uid} is added on the printed expense document (see appendix \ref{sec:app-pdf}).
 
 \begin{figure}[H]
 	\centering
@@ -30,12 +18,18 @@ The reimbursement-tool fetches user-data from the IFI LDAP server (see figure \r
 	\label{fig:context-diagram}
 \end{figure}
 
-\subsubsection{Currency exchange-rate Server}
-Often expenses accrue in foreign currencies but are paid back in CHF. To provide the user with a handy but still accurate way to calculate the historically accurate amount that has to be charged back, the reimbursement tool integrates a currency-exchange-rate-service. We decided to use \textit{fixer.io} \cite{fixer} because it is free, updated daily, provides low response times and a high availability. While the \textit{European Central Bank(ECB)}\cite{ecb} is used as data source, \textit{fixer.io} provides a query-able web-service for it. Currently, the reimbursement-tool calls the API every time an exchange-rate is needed. For example if the user specifies the amount of a receipt in a foreign currency. Since the API is called by our reimbursement-server, any cheating regarding exchange rates is prevented.
+\subsection{Services and Dependencies}
+The following sub sections explain what external systems are required to operate the reimbursement tool (please also refer to figure \ref{fig:context-diagram}).
 
-\subsubsection{UZH Mail Server}
-To notify users about actions that need their attention, the reimbursement-tool implements a notification algorithm. As soon as a new action has to be taken, the notification service adds the user's e-mail address to the e-mailing list. Emails are sent out only three times a day (8am, 12pm and 5pm). At this points in time, the e-mailing list is processed by checking if there are still actions that need the user's attention. If that is the case, an e-mail is sent out. If in the meantime the user took the required action, no e-mail is sent out. If after an e-mail sending no new action occurs that requires the user's attention, no reminder-e-mail will be sent although there are remaining actions. For the actual e-mail sending, the reimbursement-tool integrates the IFI Email Server. For more information about adjusting the e-mail settings please refer to appendix \ref{subsubsec:e-mail}.
+\subsubsection{IFI LDAP Server}
+The reimbursement-tool fetches user-data from the IFI LDAP server  and stores it in the reimbursement-database.  For more information about the features that require this dependency please refer to \ref{feature:ldap}. For details about how to adjust the LDAP settings to the appendix \ref{subsubsec:ldap}.
 
+\subsubsection{Currency Exchange-Rate Service}
+To handle currency conversions in an efficient way, we decided to use \textit{fixer.io} \cite{fixer}. \textit{Fixer.io} is free, updated daily, provides low response times and a high availability. While the \textit{European Central Bank(ECB)}\cite{ecb} is used as data source in the background, \textit{fixer.io} provides a query-able web-service for the ECB's data. More about the integrated currency feature in \ref{feature:currency}.
+
+\subsubsection{IFI Mail Server}
+\label{dep:email}
+To notify users about actions that need their attention, the reimbursement-tool implements a notification algorithm. As soon as a new action has to be taken, the notification service generates an email and sends it to the related user. More about the notification feature in \ref{feature:notification} The reimbursement tool integrates the IFI Mail Server for the actual sending of the e-mails. For more information about adjusting the e-mail settings please refer to appendix \ref{subsubsec:e-mail}.
 \newpage
 
 
@@ -43,8 +37,10 @@ To notify users about actions that need their attention, the reimbursement-tool 
 \section{Special Features}
 
 \subsection{E-mail Notifications}
-\label{sec:emailnotification}
-To inform the users of the reimbursement-tool about expense state changes or other issues that require the user's attention, e-mail notifications have been implemented. E-mail notifications are executed at the following actions:
+\label{feature:notification}
+
+To inform the users of the reimbursement-tool about expense state changes or other issues that require the user's attention, e-mail notifications have been implemented.
+E-mail notifications are executed at the following actions:
 \begin{itemize}
 	\item An expense, that has been created by a \textit{Expense Creator}, is assigned to a \textit{Manager}. An e-mail will be sent to the respective \textit{Manager}.
 	\item An expense that has been approved by the \textit{Manager} and enters the state \newline \textbf{TO\_BE\_ASSIGNED}. This will trigger an e-mail to all available users with role \textit{Finance administration}.
@@ -52,24 +48,67 @@ To inform the users of the reimbursement-tool about expense state changes or oth
 	\item If an expense is rejected by a \textit{Manager} or the \textit{Finance administration} the \textit{Expense Creator} of the expense will receive an e-mail notification.
 \end{itemize}
 
-E-mail notifications will be stored in a queue for each user and mailed to them three times a day in bulk mode. So we guarantee, that a user will not get spammed and the notifications messages are consolidated.
+As soon as a new action has to be taken, the notification service adds the user's e-mail address to the e-mailing list. E-mails are sent out as often as specified in the configuration (currently 8am, 12pm and 5pm). At this points in time, the e-mailing list is processed by checking if there are still actions that need the user's attention. If that is the case, an e-mail is sent out. If in the meantime the user took the required action, no e-mail is sent out. If after an e-mail sending no new action occurs that requires the user's attention, no reminder-e-mail will be sent although there are remaining actions. For the actual e-mail sending, the reimbursement-tool integrates the IFI Email Server \ref{dep:email}.
 
-Besides state changes and to ensure the administrator of the reimbursement-tool is aware to of major incidents, e-mails will also be sent to an administrator if a general run-time exception occurs.
+Besides the above mentioned state changes, e-mails are also sent out to warn the administrator of the reimbursement-tool of major incidents and if general run-time exceptions occurs.
 
 \subsection{LDAP Synchronisation}
-\subsection{Currency Conversion}
-\subsection{Expense Reset Options}
-\subsection{Signature Pad and Mobile Signature}
-\subsection{Attachment Upload and Mobile Attachment Upload}
-\subsection{Pure Offline Signing}
-\subsection{Guest View}
-\subsection{Multi-language capability}
-\subsection{CORS and CSRF support}
-\subsection{Expense Search Engine}
-\subsection{Deputy Feature}
-\subsection{Basic Statistics Feature}
-\subsection{Expense Pool}
+\label{feature:ldap}
+\textbf{User friendliness: }By being able to reuse the existing LDAP credentials, the user gets a comfortable way to login and ensures at the same time that only authenticated users gain access to the system.\par 
+\textbf{User Management: }The reimbursement-tool fetches user-data from the IFI LDAP server and stores it in the reimbursement-database. The user's current roles and the user's manager are then assigned automatically.  If there is no manager specified in the LDAP, a warning is shown to the user. As a whole, this is a convenience feature facilitating the user management.
 
+
+\subsection{Integrated Currency Conversion}
+\label{feature:currency}
+Often expenses accrue in foreign currencies but are paid back in CHF. To provide the user with a handy but still accurate way to calculate the historically accurate amount that has to be charged back, the reimbursement tool integrates a currency-exchange-rate-service. Currently, the reimbursement-tool calls the API every time an exchange-rate is needed. For example if the user specifies the amount of a receipt in a foreign currency. Since the API is called by our reimbursement-server, any cheating regarding exchange rates is prevented.
+
+
+\subsection{Signature Registration: mobile enabled}
+Instead of uploading an image showing their manual signature, we integrated a signature-pad. This pad allows the user to register its signature by using a touch-enabled device. This makes the registration process much easier: instead of signing on paper, scanning or photographing the paper, removing the background and uploading it, the users can simply sign on their smartphone, tablet or other touch-enabled device.
+
+\subsection{Attachment Upload: mobile enabled}
+To allow an efficient way to create expense receipts, we implemented the possibility to photograph the receipts with ones smartphone or other camera-enabled device. This makes the general reimbursement-creation process much faster, since everything can be done without leaving one's desk. Scanned documents are of course still supported.
+
+\subsection{Signing of Documents}
+The ability to sign the printed Pdf document is crucial so that authenticity is guaranteed. Especially if the Pdf document will be used as evidence by the Finance Administration of the University of Zurich. The system provides two types of signatures \cite{arx-signature}:
+\begin{itemize}
+	\item A \textbf{Digital signature} ensure the authenticity of the signer. Any changes made to the document after it has been signed will invalidate the signature. To use it the user has to provide his private key to successfully sign the document.
+	\item \textbf{Electronic signature} does \textbf{not} ensure the authenticity of the signer. Anyone can theoretically make changes on the document after it has been signed without the signature become invalid. Of course, in our tool this is prevented by design. The handwritten signature captured during the registration will be stamped on the Pdf document.
+\end{itemize}\par
+
+\textbf{Pure offline signing: }Due to the requirement, that the private key cannot be uploaded or processed by the server, the digital signing needs to be done on the client using a modern web-browser. The implementation of the digital signature is therefore done using a third party library called \textit{pdfsign.js}\cite{pdfsign}. \textit{Pdfsign.js}  is further presented in section \ref{tec:pdfsign}.\par
+
+\subsection{Guest View}
+The reimbursement-tool provides the "Guest View". The guest view is a view especially designed and implemented to allow an anonymous user (e.g the Finance Administration of the University) to view a dedicated expense with related expense items and all other information. The access to the information is granted for users that know the 32-character long internal expense \textit{Uid}. The \textit{Uid} is added on the printed expense document. To see an example, please refer to appendix \ref{sec:app-pdf}.\par 
+ 
+
+\subsection{Multi-language capability}
+The reimbursement-tool supports an easy extension of additional languages. Currently, "English" and "German" are available. To add another language on the client, only the \textit{/reimbursement-client/src/languages/languages.json} has to be extended with the translations and the navigation-bar extended with the additional language option. \newline 
+On the server, translations for the e-mail texts have to be added. Please refer for further information to the e-mail section in \ref{subsubsec:e-mail}.
+
+\subsection{CORS and CSRF support}
+In development the back-end runs on Tomcat and the front-end on Node.js, the two applications do not share the same domain (differing port). This casues the browsers "same origin policy" to prevent the loading of scripts. We solved this issue by implementing CORS. CORS offers several benefits compare to JSONP and is the de-facto standard approach to solve this issues. \par 
+
+To also allow a similar architecture in a productive environment, though not needed at the moment, we also implemented "Cross Site Request Forgery" prevention.
+
+\subsection{Deputy Feature}
+Work hard. Play hard. Good workers need and also deserve holidays. In order to allow expenses to be managed while someone is on holiday, the system automatically forwards the required activities like validation or signing to the deputy. For every employee, its deputy is assigned based on the information stored in LDAP.
+
+\subsection{Expense Pool}
+At the Finance Administration of the IFI more then one employee takes care for the expenses in the expense reimbursement process. The \textit{expense pool} is a container for all expenses that were submitted to IFI's finance administration personnel. Every finance administrator can self-assign these expenses and validate or reject them. After a finance administrator has assigned an expense to him/her, the expense will for signing be directly assigned to the same administrator.
+
+
+\subsection{Basic Statistics Feature}
+For the Finance Administration of IFI, some basic visualizations for the different states of the employees, as well as the total amount of open reimbursement cash-backs have been integrated in the user interface.
+
+\subsection{Expense Search Engine}
+To make the Finance Aadministrations work more productive, a search engine support the search for open and archived expenses. This search is especially usful in combination with the reset feature.
+
+\subsection{Expense Reset Options}
+The expense reset feature allows the Finance Administration of IFI to reset expenses, that are stuck in the process. This can happen if an employee has an inactive manager without deputy that should sign an expense. In this case, one of Finance Administrators can reset the expense and the expense process can start over. Before restarting, the new manager has to be assigned in the LDAP. Expenses can also get stuck if users are suddenly removed from the LDAP.
+
+\subsection{Archiving}
+All users can archive printed expenses. This removes the expenses from the dashboard and shows them in a separate part of the user interface. Like this, the dashboard which is optimized for the day-to-day work remains clear, neat and does not get cluttered by already processed expenses.
 
 \section{Architecture}
 
@@ -96,12 +135,16 @@ At this point an example should be given: If the \textit{presentation layer} nee
 
 \subsection{Back-end}
 The back-end is developed in Java. It is structured according to the rules of a multilayered software architecture. We use the domain driven design \cite{ddd} to apply common patterns for the layers in the back-end. The domain model, that consists of the concepts, is connected to the database. Changes on the model will be automatically synchronized with the database. The service package lists all methods that are used on a domain model.\newline
-DTOs (Data Transfer Object) are used to transfers data from back-end to front-end and vice verse. \newline The implemented model- and service-classes are visualized in appendix \ref{sec:app-models} and \ref{sec:app-service}. \par
-
-
+DTOs (Data Transfer Object) are used to transfers data from back-end to front-end and vice verse. \newline 
+The implemented model- and service-classes are visualized in appendix \ref{sec:app-models} and \ref{sec:app-service}.
 
 \subsection{Front-end}
 The front-end is developed in JavaScript using the AngularJS framework\cite{angular}. AngularJS is based on a MVC (Model View Controller) pattern. It basically consists of controllers, templates that are used for the view  as well as models representing the data that is shown to the user using the templates. However, AngularJS  extends the basic MVC concept with useful enhancements like directives, filters, injectors etc. A complete list of the available concepts in AngularJS can be found in the AngularJS Developer Guide \cite{angular-devguide}.
+
+\subsection{RESTful API}
+\label{sec:restfulapi}
+The tool uses a RESTful API that provides services to access the back-end resources. It is implemented using the Spring MVC. \newline 
+The available methods provided by the back-end are listed in \ref{sec:rest-services}. There exist private and public services. Private services can only be access by a \textbf{Registered user / User} (private services are marked with the term PRIVATE).
 
 \section{Technologies}
 
@@ -135,24 +178,11 @@ The Pdf gets generated using an individual created XSLT template and a XML docum
 We decided for Apache FOP because it is based on widely used standards like XML and XSL so that ongoing maintenance can be achieved easily and without specific knowledge required.
 
 \subsubsection{Pdfsign.js}
-The ability to sign the printed Pdf document is crucial so that authenticity is guaranteed. Especially if the Pdf document will be used as evidence by the Finance Administration of the University of Zurich. The system provides two types of signatures \cite{arx-signature}:
-\begin{itemize}
-	\item A \textbf{Digital signature} ensure the authenticity of the signer. Any changes made to the document after it has been signed will invalidate the signature. To use it the user has to provide his private key to successfully sign the document.
-	\item \textbf{Electronic signature} does not ensure the authenticity of the signer. Anyone can theoretically make changes on the document after it has been signed without the signature become invalid. Of course, in our tool this is prevented by design. The handwritten signature captured during the registration will be stamped on the Pdf document.
-\end{itemize}\par
+\label{tec:pdfsign}
+\textit{PDFSign.js} is a JavaScript library that signs a PDF in the browser. \textbf{No} private keys or passwords are ever sent over the network. The signing takes place in the browser only. The signing part is done with an adapted version of \textbf{forge}. The PDF parsing is done with a stripped down version of \textbf{PDF.js}. For more information about this library, please consult the \textit{PDFSigns} Github project \cite{pdfsign} straight. 
 
-The implementation of the digital signature is done using a third party library pdfsign.js \cite{pdfsign} that allows us to do the pdf signing in the browser and not on the server. Due to the requirement, that the private key cannot be uploaded or processed by the server, the signing needs to be done on the client using the web browser.\par
+\subsubsection{Swagger UI}
 
-All involved participants need to sign the document; \textit{Expense Creator}, \textit{Manager} and the \textit{Finance administration} to proof their acceptance of the expense and the captured receipts. \par
-
-\subsubsection{Public Interface}
-
-\paragraph{RESTful API}
-\label{sec:restfulapi}
-The tool uses a RESTful API that provides services to access the back-end resources. It is implemented using the Spring MVC. /newline
-The available methods provided by the back-end are listed in \ref{sec:rest-services}. There exist private and public services. Private services can only be access by a \textbf{Registered user / User} (private services are marked with the term PRIVATE).
-
-\paragraph{Swagger UI}
 The Swagger UI visualizes all methods provided by the RESTful interface using a simple GUI. Furthermore developers can interact directly with the Swagger UI to test the \texttt{HTTP} methods. Figure \ref{fig:swagger01} shows a screen-shot of our Swagger UI. It visualizes all the available methods for the \texttt{public} resource as well as the mandatory and optional parameters for \texttt{HTTP} calls. This was important for the process of development. \cite{swagger} \par
 We decided on Swagger UI, because a simple and easy to understand overview, as well as a simple integration into the software source-code. Further testing the back-end functionality was very simple using Swagger UI.
 
@@ -214,24 +244,13 @@ The reimbursement tool has been load-tested using the tools JMeter\cite{jmeter} 
 
 In JMeter, all required steps to perform a document upload have been modelled and compiled into a testsuite.
 
-\paragraph{VisualVM} "VisualVM is a visual tool integrating several commandline JDK tools and lightweight profiling capabilities. Designed for both production and development time use, it further enhances the capability of monitoring and performance analysis for the Java SE platform."\cite{visualvm}.\par 
-VisualVM enables the live monitoring of the active configuration, heap space, classes, instances and tasks running on the VM, where the application is deployed.\par
-
-To retrieve and display information on applications running on the remote host, the \textbf{jstatd} utility needs to be running on the remote host. Additionally a security policy file must be in place. We prepared our VMs to have the security policy file present in the \textbf{jstatd} folder:  \textit{/usr/lib/jvm/java-7-openjdk-amd64/bin/jstatd.all.policy}.\par
-
-How to start monitorng:
-\begin{itemize}
-	\item SSH to the VM, in our example the INT VM
-	\item in one command: "\textit{sudo jstatd -J-Djava.security.policy=/usr/lib/jvm/java-7-openjdk-amd64/bin/jstatd.all.policy -J-Djava.rmi.server.hostname= \textbf{HOST\_IP\_ADDRESS}}"
-	\item Switch back to your own computer and start VisualVM: it’s located in the Java/JDK/bin folder and is called \textbf{jvisualvm.exe}
-	\item "File" - "Add Remote": Host: 192.41.136.227, Name: whatever you like
-	\item Security note: Watch out to kill the \textbf{jstatd} process manually (kill PID) if the process is not killed on logout or if the terminal looses connection.
-\end{itemize}
+\paragraph{VisualVM} "VisualVM is a visual tool integrating several command line JDK tools and lightweight profiling capabilities. Designed for both production and development time use, it further enhances the capability of monitoring and performance analysis for the Java SE platform."\cite{visualvm}.\par 
+\textit{VisualVM} enables the live monitoring of the active configuration, heap space, classes, instances and tasks running on the VM, where the application is deployed. For information regarding the monitoring of a remote host, please refer to the appendix \ref{appendix:visualvm} \par
 
 \paragraph{Findings}
 The load tests have shown, that the conversion of large images could cause a bottleneck. Since the image-formats are converted to PDF only on the back-end, large images consume a huge amount of the available heap. With 2gb heap space, only 6 parallel uploads of 8mb large images can be handled. A possible work-around would be to convert the images already on the client to pdf-format and only send the pdf-documents to the server.\par
 
-Another potential bottleneck could arise, if large amounts of expenses are in the dashboard. In this case, the back-end would serialize all data required to display these expenses in a single request. This could be mitigated by implement pagination i.e. chunks of N expenses are sent to the client. If more expenses are required, the back-end sends the second page, namely the second chunk of N expenses.
+Another potential bottleneck could arise if large amounts of expenses are in the dashboard. In this case, the back-end would serialize all data required to display these expenses in a single request. This could be mitigated by implementing \textit{pagination} i.e.expenses are sent to the client in chunks of size N. If more expenses are required, the back-end sends the second page, namely the second chunk of N expenses.
 
 \subsection{User and GUI Testing}
 The graphical user interface is simple and practical. Nevertheless it provides a good user guidance and pleases the eye with subtle animations.\par
