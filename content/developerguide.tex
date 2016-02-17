@@ -1,0 +1,421 @@
+\part*{Developer Guide}
+
+\section{Installation}
+\label{chap:installation}
+In the following chapters the installation and setup of the back-end is described: The back-end uses Maven for its dependency management and build process. A local Tomcat server needs to be installed, the source code has to be downloaded from Github and the project needs to be configured as a Maven project.
+\subsection{Back-end / Server}
+\begin{enumerate}
+	\item Eclipse IDE for Java EE Developers (Java EE version!) \newline
+	\url{https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/mars/1/eclipse-jee-mars-1-win32-x86_64.zip}
+	\item Maven should already be integrated in Eclipse for JavaEE developers. If the following steps do not work, download and install Maven and the m2e Eclipse plugin. During development, Eclipse Mars 4.5.1 was used.
+	\item Unzip
+	\item New Workspace
+	\item Install Aptana Eclipse Plugin: Help | Install new Software | Paste this link:
+	\newline \url{http://download.aptana.com/studio3/plugin/install}
+	\item EGit is already installed in Java EE version of Eclipse, you can update it in the Eclipse Marketplace.
+	\item Disable Aptana Git: Preferences -> Team -> Git: disable "Automatically attach our git…"
+	\item Install lombok (infos \ref{dev:lombok})according to the online documentation:\newline
+	\url{http://projectlombok.org/download.html}
+	\item Pull the reimbursement-server project: File -> Import -> Project from Git -> Clone URI -> enter the server's Github URL (from chapter \ref{github-source})
+	\item Add Commit Staging View for committing (Window -> Show View -> Other -> Git -> Git Staging)
+	\item Install MoreUnit from Eclipse Marketplace. (MoreUnit lets you easily jump between Unit tests and productive code with CTRL+J and some more stuff..)
+	\item  Convert the server's project to a maven project by right clicking it -> Configure -> Convert to maven project.
+	\item Usually Maven works like this: You call the mvn:clean command and then the mvn:install command. Clean removes all the stuff from before whereas install downloads all the dependencies and makes a full build. It is necessary to make one initial full build to start programming.
+	\item Run \textbf{mvn:install} to build and download all the dependencies required for the project. (Right Click to the project -> Run As -> Maven Install).
+	\item  Download Apache Tomcat 8.0 or 7.0. Add the Servers view (Window | View | Others | Servers) in eclipse and click the link to create a new server. Create a new tomcat server and set the tomcat folder to the extracted tomcat path. Add the reimbursement-server package to the server.
+	\item Set the port of the tomcat to \textbf{80} instead of 8080. Double click on the server in the servers view and set the HTTP 1.1 port to \textbf{80} and the Start-timeout to about \textbf{90s}.	
+	\item  You might now start the reimbursement-backend by starting the tomcat server.
+\end{enumerate}
+
+\subsection{Front-end / Client}
+\label{installation:client}
+Let's start with getting the client's code, installing the Node.js and Bower dependencies and run Grunt.
+\begin{enumerate}
+	\item Make sure, you have installed the latest version of Node.js. In development we used Node 5.4.0 and npm 3.3.12.
+	\item  Pull the client's code from github \ref{github-source}.
+	\item  Create a deploy.json in the client (\ref{deployment:frontend}). The deploy.json is needed (it needs to be valid json, so add at least \textbf{{}}) otherwise the build does not start.
+	\item Make sure, you have installed version of Node.js
+	\item Open the Windows Powershell (nicer GUI) or the cmd or Terminal if on Mac
+	\item Navigate to the workspace directory with cd and call \textbf{npm install}. This command installs grunt and all the plug-ins of grunt in a folder called node\_components. It may take a few minutes. The folder node\_components should remain in the workspace and not be synced over Git. 
+	\item For a new installation of node components, remove the folder node\_components and call again npm install. (Removing node\_components is only recommended if components are deleted from the dependency list)
+	
+	\item While extensions to Node.js can be downloaded and installed by npm, the front-end dependencies like AngularJS, Flow.js and JQuery can conveniently be managed with Bower. If it is not already installed on your system (check in with \texttt{which bower}), install it by running \texttt{npm install -g bower}.  More information about bower in \ref{dev:bower}.
+	\item After you have verified that Bower is installed run \texttt{bower install} within the same folder. This will download all required dependencies that are defied in the \textit{bower.json}.
+	\item Install grunt to run the grunt tasks defined in the Grunt.js: \textbf{npm install -g grunt-cli} also in the same folder. More details about grunt in \ref{dev:grunt}
+	\item You might now start the client by running: \textbf{grunt serve}, or \textbf{grunt prod-serve}. An new browser should start and when the server is running the reimbursement-front-end should load.
+\end{enumerate}
+
+\section{Startup}
+If you have installed everything (you should read on to the next pages for npm, bower installation…) you can startup the front-end and back-end like this:
+\begin{itemize}
+	\item Start the server in eclipse. If no exception occurs, it is running. There is no root page for the server. It just contains REST API links. Get an overview of the available API calls with the API visualization tool Swagger (link defined below).
+	\item After installing all node and bower dependencies (see below), you can start grunt with the command \textbf{grunt serve}. This will create a local server which runs parallel to the tomcat. This server automatically updates the page on changes to the front-end code. 
+\end{itemize}
+
+\section{Development}
+\subsection{Eclipse Configuration (must-do)}
+\begin{itemize}
+	\item Build problem in Eclipse Luna: Eclipse does not take the Maven 
+	Window | Preferences | General | Workspace | Disable: Refresh using native hooks or polling
+	\item Remove trailing whitespace characters in Aptana:
+	Window | Preferences | Aptana Studio | Editors | Enable: Remove Trailing Whitespace
+	\item Remove trailing whitespace characters in Java Editor
+	Window | Preferences | Java | Editor | Save Action | Enable: Perform the selected actions (...), Enable: Additional actions, Click: Configure, Enable: Remove trailing whitespace, Enable: Correct indentation
+	\item Set line width to 120 in Java:
+	Window | Preferences | Java | Code Style | Formatter | Edit | Line Wrapping | Maximum Line Width: 120
+	\item Change Eclipse Encoding to UTF-8:
+	Window | Preferences | General | Workspace | Text file encoding | Other: UTF-8
+\end{itemize}
+
+\subsection{Optional Eclipse Recommendations}
+\begin{itemize}
+	
+	\item Disable the Search/Find Bar of Aptana and use the standard eclipse one:\newline
+	Window | Preferences | Aptana Studio | Find Bar | Disable: Use custom find bar on Aptana Studio editors
+	\item Hide the structure compare in the compare view (mostly unnecessary, takes a lot of space in compare view):\newline
+	Windows | Preferences | General | Compare/Patch | Disable: Open structure compare automatically
+	\item Change the font of the text editors in eclipse to consolas (better readability):\newline
+	Window | Preferences | General | Appearance | Colors and Fonts |
+	Basic | Text Font: Consolas 10px
+	and
+	Terminal Console Font: Consolas 10px
+	\item Change Tab width to 3 and enable Tabs instead of spaces:\newline
+	Window | Preferences | General | Editors | Text Editors | Displayed Tab Width: 3
+	Window | Preferences | PyDev | Editors | Tab length: 3
+	Window | Preferences | Aptana Studio | Editors | {{ All languages }} | Indentation: Use Tabs with Tab Size 3
+	\item Change visibility of whitespace characters to semi-visible:\newline
+	Window | Preferences | General | Editors | Text Editors | Enable: Show whitespace characters, set visibility to 50 - here you can also disable show carriage return and line ends
+	\item Remove validation warning "should trim empty element":\newline
+	Window | Preferences | Aptana Studio | Validation | HTML Tidy Validator | Elements | Trim Empty Elements: Ignore
+	\item Remove validation warning "proprietary element attribute":\newline
+	Window | Preferences | Aptana Studio | Validation | HTML Tidy Validator | Attribute | Proprietary Element Attributes: Ignore
+	\item Add Mockito static imports to eclipse favorites (then you do not have to search for the right dependencies anymore):\newline \url{http://stackoverflow.com/a/11830091/3233827URL}\newline
+	org.mockito.Matchers\newline
+	org.mockito.BDDMockito\newline
+	org.hamcrest.Matchers\newline
+	org.hamcrest.MatcherAssert\newline
+	org.mockito.Mockito\newline
+	org.springframework.test.util.ReflectionTestUtils\newline
+	\item Remove the leading space of key value pairs:\newline
+	Window | Preferences | Aptana Studio | Formatter | JavaScript | "Pencil Icon" | Spaces | Operators | Key-Value-Operator | Before: 0
+	\item Remove XML grammar warnings \newline
+	Window | Preferences | XML | XML Files | Validation | Validating files | No grammar specified: Ignore
+\end{itemize}
+
+
+\subsection{Updating/Committing}
+\begin{enumerate}
+	\item No changed files in eclipse
+	\begin{enumerate}
+		\item Check for new files: Right click to project - Team - Fetch from upstream
+		\item Bring the files in your workspace: Right click to project - Team - Rebase
+	\end{enumerate}
+	\item With new files in eclipse
+	\begin{enumerate}
+		\item Check for new files: Right click to project - Team - Fetch from upsteam
+		\item Commit the files with the Git Staging view locally. Push will only work if no updates are available. After a push, you’re done.
+		\item If any updates from other users are available, Pushing will be rejected. Make sure, no unstaged files are left in eclipse (unstaged files: files, not commited locally). All files need to be commited locally.
+		\item Bring the new files from the repo to your workspace: Right click to project - Team - Rebase. This will apply the new files to the previous state of your workspace and then apply your new local commits to it. It opens a merge view, if necessary.
+		\item After rebasing, you can now push and it should not be rejected anymore.
+	\end{enumerate}
+\end{enumerate}
+
+\subsection{Development: Back-end}
+
+\subsubsection{Lombok Installation}
+\label{dev:lombok}
+\begin{enumerate}
+	\item If multiple getters and setters can not be found, you may not have downloaded and installed lombok correctly. You need to open the jar with the Java Runtime Environment and install Lombok to the eclipse.exe, you are developing in. The live generation of the code is managed by Maven in the background and you do not have to worry about that.
+	\item With Lombok you can add an annotation to a variable or to the class and it will automatically generate either only getters, only setters or both of them (@Getter, @Setter, @Data). If the variables are final, it generates also a constructor. For more information please refer to the Lombok Doku.
+\end{enumerate}
+
+\subsubsection{Unit testing with Mockito}
+Mockito is a unit testing framework. It is very useful to mock dependencies of a single class. With Mockito, you can give a depending object any behavior, because you don’t want to test the depending classes. You only want to test the behavior of the single class you are currently testing.\par
+A Mockito test is usually strucutured into three sections: given, when, then. In given you specify the preconditions, mock all necessary objects. In when you actually call the method you want to test. In then, you verify, that the methods makes everything correctly. You can do that by "verify" which verifies, if a method was called, or by assertThat which verifies if for example the returning value is equal to the expeceted returning value.\par
+Run a test with a right click to the class or package and hit Run As | JUnit Test. It will be automatically running in a maven build.
+
+\subsubsection{Spring MVC}
+Spring MVC makes it very easy to create REST API’s. We use a Java Annotation-based configuration of Spring (not xml-based as it is still supported). You can create Singletons by adding an annotation like @Service or @Component to a Singleton class. This singleton can then be accessed by defining a variable in another class with the annotation @Autowired. RestControllers have the annotation @RestController and the @RequestMapping for defining the URL.
+
+\subsubsection{Swagger \& Swagger-UI}
+Swagger is a graphical visualization of the REST interface. It gives a good overview over the methods and provides an interface to the methods: This means, that the REST calls can directly being sent over the Swagger UI (text input field for data, structured templates for JSON entry). Swagger-UI is the html/js/css representation of the data which is provided by the Spring MVC back-end. The UI is installed as a WebJAR, that it can be included as a Maven dependency with version control. The data is provided by the Swagger-SpringMVC framework which reads all the interface methods and returns a JSON to the Swagger UI. The methods can be described in detail and also every return type (e.g. exception message) can be described with Java Annotations. These annotations will be directly added to the SpringMVC REST methods. They usually start with Api: @Api, @ApiOperation, … It’s only necessary that you know how to document the REST interface with the annotations.\par
+You can call the Swagger UI with a running tomcat on this link:
+\url{http://localhost/api/swagger-ui/2.1.8-M1/index.html}
+
+\subsection{Development: Front-end}
+
+\subsubsection{Bower}
+\label{dev:bower}
+Bower loads all the front-end modules. For example, you can add jQuery or Angular.js to the bower.json file and by running \textbf{bower install}, every dependency is downloaded to the folder. You can then use the files or process it with Grunt (concat, uglify…)
+\begin{enumerate}
+	\item After doing all the steps in the installation part (section \ref{installation:client}), you can run bower. Make sure, that you reinstall bower components (\textbf{bower install}), when there are changes to the bower.json file.
+	\item Run bower install in the root directory of reimbursement client.
+\end{enumerate}
+
+To install it, call \textbf{npm install -g bower}.
+
+\subsubsection{Grunt}
+\label{dev:grunt}
+Grunt builds the front-end files. It has multiple modules to build: you can concat, copy, prefix, sass-compile and so on with grunt. It’s an easy way to build your source files. The configuration of Grunt is stored in Gruntfile.js file in the root directoy of the client application. The different grunt modules of grunt are loaded with NPM (package.json)\par
+
+After doing all the steps in NPM and installing grunt globally (as described in \ref{installation:client} \textbf{npm install -g grunt-cli}) you can run grunt.\par
+There are different options to start grunt in the directory of the client:
+\begin{itemize}
+	\item \texttt{grunt}: This command starts the default grunt operation. It is used to build all the files. Use it only for development purpose, because the minified versions are not created.
+	\item \texttt{grunt prod}: This command minifies and uglifies all the files. Use it to test if minification and uglification covers all the production requirements.
+	\item \texttt{grunt serve}: This command starts a local http-server and updates automatically. If a source file is changed, the build will be executed and the browser will be reloaded to visualize the changes.
+	\item \texttt{grunt prod-serve}: This command runs starts a local server with the production files as a base.
+	\item \texttt{grunt deploy-int}: This command builds the project with the production profile and uploads the created files to the INTEGRATION Tomcat instance running on 192.41.136.227 (makes a redeploy). The deployment requires a deploy.json with the server configuration. Please refer to the Deployment section for details.
+	\item \texttt{grunt deploy-prod}: This command builds the project with the production profile and uploads the created files to the PRODUCTION Tomcat instance running on 192.41.136.228 (makes a redeploy). The deployment requires a deploy.json with the server configuration. Please refer to the Deployment section for details.
+\end{itemize}
+
+\subsection{Project Structure}
+The project is currently structured according to the rules of Domain Driven Development. There is a domain model, which is directly connected to the database. Any change to the model (through a transactional service) will be automatically pushed to the database. There is a service package, where the methods superior to the domain are listed. This means e.g. if you want to change the name of a user, you do it directly there, but if you want to find/delete/create.. a user X, you do it in the service. The REST interface calls then the service from its various methods. There is a package DTO (data transfer object). This is necessary to transfer the data from the front-end to the back-end. If you, for example, send a new firstname and lastname together with the uid to the back-end, you can encapsulate it in this DTO object and send it as a JSON.
+
+
+\subsection{Spring Data, Database H2, Hibernate}
+Hibernate allows it to manipulate a Java Domain Model Object and push the changes directly to the database. This means, that you can change the first name of a user in the database by simply calling the setter of a User object: user.setFirstName("Peter") and the change will be transferred automatically.\par
+Spring Data manages all the DAO stuff (database access). It provides a repository with a lot of methods like get me all users, delete user x, create user y, etc. Special calls can be added simply with @QUERY("SELECT X FROM Y").\par
+
+
+Currently an H2 database is configured. H2 provides a very simple way of configuring the database: you just write the small config in the database URL and that’s it. H2 is currently configured to store the database in the user directory (C:\\Users\\XYZ\\reimbursement-databaseURL). If you find out how to change that reasonably (e.g. to the project folder) you can do it in application.properties. The database can be exchanged by another database by simply writing another application.properties file.
+
+
+\section{Good to know for programming:}
+\begin{itemize}
+	\item The first time you start the server after an update, the database initialization script will run and create a database with an empty table User. This is necessary, because it will be needed to create, delete, get users. It is done by Flyway in a predefined SQL file.
+	\item The database will be stored on your computer. You can delete the whole folder (C:\\Users\\XYZ\\h2-database), after a restart of the server, the database is ready and fresh again.
+	\item If a flyway migration exception occurs during the startup, clear the database folder and start it again. This happens, if somebody changes the initial SQL script. Flyway is for migrating and this will cause a migration error. Just delete the h2-database folder and it sets a new db up.
+	\item The REST interface (user resource) is already working, connected to the DB.
+	\item There is a GUI for the H2 database, which can be opened parallel to the server. Here the steps:
+	\item Find out where the h2 jar is stored. You find it in your Maven dependencies in eclipse. Here a screenshot:  
+	\item Go to the folder of H2 and copy it or make a shortcut on a convenient place of your choice. You will need it now and then. Open it.
+	\item A browser window is opened and a small icon in the taskbar is shown that the GUI is running (even when you close the window, you also need to close the icon)
+	\item You need to specify (I think only the first time) the exact same address, user, password as in the application.properties. This is important. Currently the url is\newline
+\textit{jdbc:h2:file:~/reimbursement-database/database;AUTO\_SERVER=TRUE}
+	\item The gui represents the database: on the left side there is a table USER and if you click it you can call an SQL command like SELECT * FROM USER
+\end{itemize}
+
+\section{Deployment}
+The deployment is different in the front-end and back-end. While the backend is deployed using maven, the front-ends has a dedicated grunt task to deliver the job. The back-end is deployed to the Tomcat Manager with the package name \textbf{api} and the front-end is deployed to \textbf{ROOT}.
+The Tomcat Manager is available on this link:
+\url{http://192.41.136.227/manager/html}. The credentials can be found on the VMs in the root's home directory (reimbursement-passwords.txt file).
+
+\subsection{Back-End}
+\textbf{If you are using Eclipse Luna, there is a bug in using the Maven profiles. Make sure, you disable the checkbox "Refresh using native hooks or polling" in Window | Preferences | General | Workspace. Bug report is filed.}\par
+
+\subsubsection{Credentials}
+\begin{itemize}	
+		\item In order to deploy, you need to store the credentials of the tomcat7 deployment manager and the productive database.\par
+		
+		Let's start by adding the deployment manager's credentials: Open the settings.xml file (This is mostly in the user's home directory: \textit{C:\\Users\\<username>\\.m2} - if there is no \texttt{.m2/settings.xml} file, create a new one)  and add the following settings (be aware that the passwords need to be xml-encoded. The credentials can be found on the existing VMs root's home folder as reimbursement-passwords.txt file:
+	
+	\begin{lstlisting}[numbers=left, breaklines=true]
+	<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+	http://maven.apache.org/xsd/settings-1.0.0.xsd">
+		<servers>
+			<server>
+			<id>reimbursement-server</id>
+			<username> *** </username>
+			<password> *** </password>
+			</server>
+		</servers>
+	</settings>
+	\end{lstlisting}
+	
+	\item As next, to provide username and password for the database, we use a generic approach that enables different usernames and passwords on different servers without the need to change any application code. \par
+	
+	Adapt the two parameter entries of Tomcat’s context file. The file is located at \textit{tomcat/conf/context.xml}. The credentials can be found on the VMs root's home folder as reimbursement-passwords.txt file.
+	
+	\begin{lstlisting}[numbers=left, breaklines=true]
+	<Context>
+	<!-- Default set of monitored resources -->
+	<WatchedResource>WEB-INF/web.xml</WatchedResource>
+	
+	<!-- Uncomment this to disable session persistence across Tomcat
+	restarts -->
+	<!--
+	<Manager pathname="" />
+	-->
+	
+	<!-- 
+	Uncomment this to enable Comet connection tacking (provides events
+	on session expiration as well as webapp lifecycle)
+	-->
+	
+	<!-- 
+	<Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
+	-->
+	
+	<Parameter name="jdbc.username" value=" ***" />
+	<Parameter name="jdbc.password" value=" *** "/>
+	
+	</Context>
+	\end{lstlisting}
+
+\end{itemize}
+
+\subsubsection{Maven Profiles}
+\label{sub:profiles}
+Currently there are three build profiles available \textit{reimbursement\_dev},  \textit{reimbursement\_int} and \textit{reimbursement\_prod}. Build profiles switch between the H2 database and the productive Postgres database. In the development and integration mode, additionally an LDAP server providing a few demo users to mock the real users is started. Additionally there are also inserted the same users into the database. \par
+
+By default, the profile \textit{reimbursement\_dev} is active. So an LDAP server is started and the H2 database is used. To enable the \textit{reimbursement\_prod} profile locally, pass the profile to the local tomcat. This can be achieved by right clicking on the project in the eclipse explorer | Properties | Maven and enter the word \textit{reimbursement\_dev} into the input field.
+
+
+\subsubsection{Run Configurations}	
+\begin{itemize}
+	\item To configure the deployment profiles in eclipse right click to the server project in Eclipse -> Run As -> Maven Build... and enter the following values in the corresponding input fields:
+	\newline
+	Name: \texttt{reimbursement-prod} or  \texttt{reimbursement-int}
+	\newline
+	Goals: \texttt{clean tomcat7:redeploy}
+	\newline
+	Profiles: \texttt{reimbursement\_prod} or \texttt{reimbursement\_int}
+	\item run the new created Maven build and the project will be deployed to the production/integration server.
+	
+	\item If you do not enter the profile name, the test database is started on your server and a H2 database is used.
+	\item You can now deploy the back-end to the server by running the newly created run configuration.
+\end{itemize}
+
+\section{Putty and SSH connection}
+\begin{itemize}
+	\item Download putty.exe
+	\item Host: 192.41.136.227 / 228 , Port: 22
+	\item Switch to "Connection" - "Data" and enter your username you have on the VM
+	\item Switch to "Connection" - "SSH" - "Auth" and enter your private key's path
+	\item Switch back to "Session" and enter there a name for your setting and save the settings. The next time you can load these settings again...
+\end{itemize} 
+
+
+\section{Debugging on Production}
+\begin{itemize}
+	\item The tomcat log files are stored in \newline
+	\textit{ /var/lib/tomcat7/logs}
+	\item The reimbursement-tool's logs and the H2 DB (if used) are stored in \newline \textit{/usr/share/tomcat7/}
+	\item The manager can be found at http://192.41.136.228/manager (same credentials as in deployment)
+	\item You can only show the log files, if you are root. Use 
+	\begin{lstlisting}
+	#show the current logs with autorefresh
+	sudo tail -f /var/lib/tomcat7/logs/catalina.out
+	
+	#the whole logfile in the console
+	sudo cat /var/lib/tomcat7/logs/catalina.out	\end{lstlisting}
+\end{itemize}
+
+\section{Best practice while deploying}
+\begin{itemize}
+	\item Before deploying, log in to the VM with SSH
+	\item Open this command BEFORE you start the deployment:
+	\begin{lstlisting}
+		sudo tail -f /var/lib/tomcat7/logs/catalina.out
+	\end{lstlisting}
+	\item reset DB with the bash script Postgres on VM \ref{sec:postgresOnVM}
+	\item Start the deployment in eclipse or maven
+	\item Check the logs for exceptions during the startup
+	\item Fix the exceptions
+\end{itemize}
+
+\textbf{HeapSpace Bug: Restart Tomcat after deployment}\newline
+\textit{sudo service tomcat7 restart}
+
+\section{PostgreSQL on VM}
+\label{sec:postgresOnVM}
+\textbf{DO NEVER! DELETE DATABASE AND SCHEMA}
+
+\textbf{Credentials:}\newline
+Please refer to the root's home directory of the VM: there should be a reimbursement-password.txt file.
+
+
+\textbf{Login to database in bash:}\newline
+\textit{psql -h localhost -U reimbursement}
+
+
+\textbf{After login to DB:}\newline
+\textit{\textbackslash d   shows all tables (relations)}\newline
+\textit{\textbackslash q   quit the view}
+
+\paragraph{Clear PostgresDB}
+\label{sec:clear-postgresdb}
+To monitor the database version, Flyway is used. Flyway checks the database version and notifies about incompatible versions. This requires either to update the database version or to empty the existing database. To empty the existing PostgresDB without loosing database rights etc., a bash script is available. To run the script, the VM needs to be accessed through SSH and the script be run as root. The script is available in the directory \textit{/usr/share/tomcat7/reimbursement-database} named \textit{clear-postgres-database.bash}.
+
+\textbf{Bash Script to clear database reimbursement:}\newline
+\textit{bash /usr/share/tomcat7/reimbursement-database/clear-postgres-database.bash}
+
+\begin{lstlisting}[numbers=left, breaklines=true]
+export PGPASSWORD=" *** "
+
+
+# Drop constraints
+psql -qAtX -h localhost -U reimbursement --command "SELECT 'ALTER TABLE '||table_name||' DROP CONSTRAINT '||constraint_name||';' FROM information_schema.constraint_table_usage;" | psql -h localhost -U reimbursement -qAtX
+
+
+# Drop tables
+psql -AtX -h localhost -U reimbursement --command "select 'DROP TABLE IF EXISTS ' || quote_ident(table_schema) || '.' || quote_ident(table_name) || ' CASCADE;' FROM information_schema.tables where table_type = 'BASE TABLE' and not table_schema ~ '^(information_schema|pg_.*)$';" | psql -h localhost -U reimbursement -AtX
+
+
+# Drop sequences
+psql -AtX -h localhost -U reimbursement --command "select 'DROP SEQUENCE IF EXISTS ' || quote_ident(relname) || ' CASCADE;' from pg_statio_user_sequences;" | psql -h localhost -U reimbursement -AtX
+
+
+unset PGPASSWORD
+\end{lstlisting}
+
+
+\section{Deployment in front-end}
+\label{deployment:frontend}
+\begin{itemize}
+	\item First you need to store the credentials into the file \textit{deploy.json} in the root directory.
+	\item The \textit{deploy.json} consists of two parameters: username and password. The credentials can be found on the VMs root's home folder as reimbursement-passwords.txt file.
+	\begin{lstlisting}
+		{
+		"username": " *** ",
+		"password": " ***"
+		}	\end{lstlisting}
+	\item You are now done. Run one of the following commands to deploy.
+	\begin{lstlisting}
+	# integration server
+	grunt deploy-int 
+	
+	#prudction server
+	grunt deploy-prod
+	
+	#to create the .war file without pushing to a server
+	grunt deploy-local	\end{lstlisting}.
+	\item To modify the server's IP address, please refer to the \textit{Gruntfile.js} file that is located in the client's root directory.
+\end{itemize}
+
+
+\section{Remote Monitoring of Heap Space and JVM Argument passing}
+\label{appendix:visualvm}
+To retrieve and display information on applications running on the remote host, the \textbf{jstatd} utility needs to be running there. Additionally a security policy file must be in place. We prepared our VMs to have the security policy file present in the \textbf{jstatd} folder:  \textit{/usr/lib/jvm/java-7-openjdk-amd64/bin/jstatd.all.policy}.\par
+
+To remote monitor the VM using \textbf{VisualVM}, we have to start and additional RMIService called jstatd. (WORKS only in an IFI Network.)
+
+\begin{enumerate}
+	\item SSH to the VM, in our example the INT VM
+	\item in one command:
+	\begin{lstlisting}[numbers=left, breaklines=true]
+	sudo jstatd -J-Djava.security.policy=/usr/lib/jvm/java-7-openjdk-amd64/bin/jstatd.all.policy -J-Djava.rmi.server.hostname=192.41.136.227
+	\end{lstlisting}
+	\item Switch back to your own computer and start VisualVM: it’s located in the Java/JDK/bin folder and is called jvisualvm.exe
+	\item File -> Add Remote:\newline
+	Host: 192.41.136.227\newline
+	Name: whatever you like
+	\item Watch out to kill the jstatd process manually (kill PID) if the process is not killed on logout or if your terminal looses connection
+	\item \textbf{Security note:} Watch out to kill the \textbf{jstatd} process manually (kill PID) if the process is not killed on logout or if the terminal looses connection.
+\end{enumerate}
+
+\section{JVM Arguments Configuration}
+How to set the JVM Arguments for Tomcat\newline
+\url{http://crunchify.com/how-to-change-jvm-heap-setting-xms-xmx-of-tomcat/}
+
+We added an setenv.sh file to tomcat7 folder with this content:
+\begin{lstlisting}[numbers=left, breaklines=true]
+export CATALINA_OPTS="$CATALINA_OPTS -Xms512m"
+export CATALINA_OPTS="$CATALINA_OPTS -Xmx2g"	
+\end{lstlisting}
+
+Common Failures\newline
+\url{http://javahowto.blogspot.ch/2006/06/6-common-errors-in-setting-java-heap.html}
