@@ -1,5 +1,5 @@
 \part*{Developer Guide}
-
+\chapter{Developer Guide}
 \section{Installation}
 \label{chap:installation}
 In the following chapters the installation and setup of the back-end is described: The back-end uses Maven for its dependency management and build process. A local Tomcat server needs to be installed, the source code has to be downloaded from Github and the project needs to be configured as a Maven project.
@@ -279,7 +279,7 @@ By default, the profile \textit{reimbursement\_dev} is active. So an LDAP server
 	\item You can now deploy the back-end to the server by running the newly created run configuration.
 \end{itemize}
 
-\section{Putty and SSH connection}
+\subsection{Putty and SSH connection}
 \begin{itemize}
 	\item Download putty.exe
 	\item Host: 192.41.136.227 / 228 , Port: 22
@@ -289,7 +289,7 @@ By default, the profile \textit{reimbursement\_dev} is active. So an LDAP server
 \end{itemize} 
 
 
-\section{Debugging on Production}
+\subsection{Debugging on Production}
 \begin{itemize}
 	\item The tomcat log files are stored in \newline
 	\textit{ /var/lib/tomcat7/logs}
@@ -304,7 +304,7 @@ By default, the profile \textit{reimbursement\_dev} is active. So an LDAP server
 	sudo cat /var/lib/tomcat7/logs/catalina.out	\end{lstlisting}
 \end{itemize}
 
-\section{Best practice while deploying}
+\subsection{Best practice while deploying}
 \begin{itemize}
 	\item Before deploying, log in to the VM with SSH
 	\item Open this command BEFORE you start the deployment:
@@ -320,7 +320,7 @@ By default, the profile \textit{reimbursement\_dev} is active. So an LDAP server
 \textbf{HeapSpace Bug: Restart Tomcat after deployment}\newline
 \textit{sudo service tomcat7 restart}
 
-\section{PostgreSQL on VM}
+\subsection{PostgreSQL on VM}
 \label{sec:postgresOnVM}
 \textbf{DO NEVER! DELETE DATABASE AND SCHEMA}
 
@@ -336,7 +336,7 @@ Please refer to the root's home directory of the VM: there should be a reimburse
 \textit{\textbackslash d   shows all tables (relations)}\newline
 \textit{\textbackslash q   quit the view}
 
-\paragraph{Clear PostgresDB}
+\subsubsection{Clear PostgresDB}
 \label{sec:clear-postgresdb}
 To monitor the database version, Flyway is used. Flyway checks the database version and notifies about incompatible versions. This requires either to update the database version or to empty the existing database. To empty the existing PostgresDB without loosing database rights etc., a bash script is available. To run the script, the VM needs to be accessed through SSH and the script be run as root. The script is available in the directory \textit{/usr/share/tomcat7/reimbursement-database} named \textit{clear-postgres-database.bash}.
 
@@ -363,7 +363,7 @@ unset PGPASSWORD
 \end{lstlisting}
 
 
-\section{Deployment in front-end}
+\subsection{Deployment in front-end}
 \label{deployment:frontend}
 \begin{itemize}
 	\item First you need to store the credentials into the file \textit{deploy.json} in the root directory.
